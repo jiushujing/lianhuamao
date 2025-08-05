@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatScreen: document.getElementById('chat-screen'),
         profileSettingsScreen: document.getElementById('profile-settings-screen'),
         apiSettingsScreen: document.getElementById('api-settings-screen'),
-        
+        backgroundSettingsScreen: document.getElementById('background-settings-screen')
+
         // Home Screen
         characterList: document.getElementById('character-list'),
         addCharacterBtn: document.getElementById('add-character-btn'),
@@ -72,6 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btnGemini: document.getElementById('btn-gemini'),
         openaiModelsGroup: document.getElementById('openai-models'),
         geminiModelsGroup: document.getElementById('gemini-models'),
+        bgSettingInputs: document.querySelectorAll('.hidden-upload'),
+        bgSettingClearBtns: document.querySelectorAll('.bg-setting-group .btn-danger'),
+        dashboardBgPreview: document.getElementById('dashboard-bg-preview'),
+        widgetBgPreview: document.getElementById('widget-bg-preview'),
+        apiIconBgPreview: document.getElementById('api-icon-bg-preview'),
+        themeBarBgPreview: document.getElementById('theme-bar-bg-preview'),
+        bgWidgetBottomLeft: document.querySelector('.bg-widget-bottom-left'),
     };
 
     let characters = [];
@@ -142,8 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const screenMap = {
             home: dom.homeScreen, myDashboard: dom.myDashboardScreen, characterDetail: dom.characterDetailScreen,
             characterEdit: dom.characterEditScreen, chat: dom.chatScreen, apiSettings: dom.apiSettingsScreen,
-            profileSettings: dom.profileSettingsScreen
-        };
+            profileSettings: dom.profileSettingsScreen,
+            backgroundSettings: dom.backgroundSettingsScreen // <-- 添加这一行
+};
         if (screenMap[screenName]) screenMap[screenName].classList.remove('hidden');
         if (screenName === 'home') renderCharacterList();
     };
@@ -152,6 +161,64 @@ document.addEventListener('DOMContentLoaded', () => {
     const enterBatchDeleteMode = () => { isBatchDeleteMode = true; dom.homeScreen.classList.add('batch-delete-active'); renderCharacterList(); };
     const exitBatchDeleteMode = () => { isBatchDeleteMode = false; dom.homeScreen.classList.remove('batch-delete-active'); renderCharacterList(); };
 
+    // --- Background Settings Logic ---
+let backgrounds = {};
+
+const applyBackgrounds = () => {
+    const bgMap = {
+        dashboard: { element: dom.myDashboardScreen, preview: dom.dashboardBgPreview, default: 'https://images.unsplash.com/photo-1617957743097-0d20aa2ea762?q=80&w=2532&auto=format&fit=crop' },
+        widgetBg: { element: dom.iconBackground, preview: dom.widgetBgPreview, default: '' },
+        apiIcon: { element: dom.iconApi, preview: dom.apiIconBgPreview, default: '' },
+        themeBar: { element: dom.iconTheme, preview: dom.themeBarBgPreview, default: '' }
+    };
+
+    for (const key in bgMap) {
+        const url = backgrounds[key] || bgMap[key].default;
+        if (url) {
+            bgMap[key].element.style.backgroundImage = `url(${url})`;
+            if (bgMap[key].preview) bgMap[key].preview.src = url;
+        } else {
+            bgMap[key].element.style.backgroundImage = '';
+            if (bgMap[key].preview) bgMap[key].preview.src = '';
+        }
+    }
+};
+
+const saveBackgrounds = () => {
+    localStorage.setItem('aiChatBackgrounds', JSON.stringify(backgrounds));
+};
+
+const loadBackgrounds = () => {
+    const saved = localStorage.getItem('aiChatBackgrounds');
+    backgrounds = saved ? JSON.parse(saved) : {};
+    applyBackgrounds();
+};
+
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const key = event.target.dataset.key;
+    if (!file || !key) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        backgrounds[key] = dataUrl;
+        saveBackgrounds();
+        applyBackgrounds();
+    };
+    reader.readAsDataURL(file);
+};
+
+const handleImageClear = (event) => {
+    const key = event.target.dataset.key;
+    if (!key) return;
+    if (confirm('确定要清除这个背景吗？')) {
+        backgrounds[key] = null; // Use null or delete backgrounds[key]
+        saveBackgrounds();
+        applyBackgrounds();
+    }
+};
+    
     // --- Event Listeners ---
     document.querySelectorAll('.page-toggle-checkbox').forEach(box => {
         box.addEventListener('change', () => showScreen(box.checked ? 'myDashboard' : 'home'));
@@ -173,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Icon click listeners
     dom.iconProfile.addEventListener('click', () => showScreen('profileSettings'));
     dom.iconApi.addEventListener('click', () => showScreen('apiSettings'));
+    dom.bgWidgetBottomLeft.addEventListener('click', () => showScreen('backgroundSettings'));
     dom.iconBackground.addEventListener('click', () => alert('背景设置功能正在开发中！'));
     dom.iconMusic.addEventListener('click', () => alert('音乐功能正在开发中！'));
     dom.iconTheme.addEventListener('click', (e) => {
@@ -184,6 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dom.iconSliders.addEventListener('click', (e) => e.stopPropagation());
 
+    dom.bgSettingInputs.forEach(input => {
+    input.addEventListener('change', handleImageUpload);
+});
+
+dom.bgSettingClearBtns.forEach(btn => {
+    btn.addEventListener('click', handleImageClear);
+});
+    
     dom.menuBtn.addEventListener('click', (e) => { e.stopPropagation(); dom.dropdownMenu.style.display = dom.dropdownMenu.style.display === 'block' ? 'none' : 'block'; });
     
     // *** MODIFIED: Dropdown menu logic to allow links to work ***
@@ -454,5 +530,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProfileSettings();
     loadApiSettings();
     loadWidgetSettings();
+    loadBackgrounds();
     showScreen('home');
 });
