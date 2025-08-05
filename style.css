@@ -207,3 +207,57 @@ body.manual-body {
 .confirm-button:hover {
     background-color: #0056b3;
 }
+/* === STYLES FOR BACKGROUND SETTINGS SCREEN === */
+.bg-settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 10px;
+}
+.bg-setting-group {
+    background-color: var(--primary-bg);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+.bg-setting-group label {
+    font-weight: 600;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+}
+.bg-preview-wrapper {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.bg-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: #e9ecef;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+}
+.bg-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+.hidden-upload {
+    display: none;
+}
+.bg-actions .action-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* === DYNAMIC BACKGROUND STYLES === */
+#my-dashboard-screen, #icon-background, #icon-api, #icon-theme {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
