@@ -281,8 +281,6 @@ const handleImageClear = (event) => {
     // Icon click listeners
     dom.iconProfile.addEventListener('click', () => showScreen('profileSettings'));
     dom.iconApi.addEventListener('click', () => showScreen('apiSettings'));
-    dom.bgWidgetBottomLeft.addEventListener('click', () => showScreen('backgroundSettings'));
-    dom.iconMusic.addEventListener('click', () => alert('音乐功能正在开发中！'));
     dom.iconEntertainment.addEventListener('click', (e) => { // <-- 修改这里
         if (e.target.classList.contains('entertainment-swatch')) { // <-- 修改这里
         e.stopPropagation();
