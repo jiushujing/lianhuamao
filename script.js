@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadLabelSettings = () => {
         const saved = localStorage.getItem('aiChatLabelSettings');
         // 关键修改 2: API标签默认值变为空字符串
-        const defaults = { api: '', opacity: '组件透明度', brightness: '组件黑白度' };
+        const defaults = { opacity: '组件透明度', brightness: '组件黑白度' };
         labelSettings = saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
         Object.keys(labelSettings).forEach(key => {
             const input = document.getElementById(`label-${key}`);
