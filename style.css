@@ -212,20 +212,97 @@ body.manual-body {
 .confirm-button:hover {
     background-color: #0056b3;
 }
-/* === STYLES FOR BACKGROUND SETTINGS SCREEN === */
-.bg-settings-container { display: flex; flex-direction: column; gap: 20px; padding-top: 10px; }
-.bg-setting-group { background-color: var(--primary-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); }
-.bg-setting-group label { font-weight: 600; font-size: 16px; display: block; margin-bottom: 10px; }
-.bg-preview-wrapper { display: flex; gap: 15px; align-items: center; }
-.bg-preview { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; background-color: #e9ecef; flex-shrink: 0; border: 1px solid #ddd; }
-.bg-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+/* === STYLES FOR BACKGROUND SETTINGS SCREEN (GRID LAYOUT) === */
+.bg-settings-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 创建一个两列的网格 */
+    gap: 15px; /* 设置网格间距 */
+    padding-top: 10px;
+}
+
+.bg-setting-group {
+    background-color: var(--primary-bg);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    display: flex; /* 让内部元素垂直排列 */
+    flex-direction: column;
+}
+
+/* 让桌面背景和娱乐功能组占据整行宽度 */
+.bg-settings-container > .bg-setting-group:first-child,
+#entertainment-settings-group {
+    grid-column: 1 / -1; /* 关键：让元素横跨所有列 */
+}
+
+.bg-setting-group label {
+    font-weight: 600;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.bg-preview-wrapper {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: auto; /* 将预览和按钮推到底部，实现对齐 */
+}
+
+.bg-preview {
+    width: 60px; /* 缩小一点，更精致 */
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: #e9ecef;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+}
+
+.bg-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
 .hidden-upload { display: none; }
-.bg-actions .action-button { padding: 8px 12px; font-size: 14px; text-align: center; }
-/* New styles for sub-groups */
-.sub-group { margin-top: 15px; padding-top: 15px; border-top: 1px solid #f0f0f0; }
-.sub-group:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
-.sub-group-label { font-size: 14px; color: #6c757d; width: 20px; text-align: center; flex-shrink: 0; }
-.bg-preview.small { width: 50px; height: 50px; }
+
+.bg-actions .action-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* === 娱乐功能图标的嵌套网格 === */
+.entertainment-icons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 在内部创建一个四列网格 */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.entertainment-icons-grid .sub-group {
+    flex-direction: column; /* 让小图标垂直排列 */
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.entertainment-icons-grid .sub-group-label {
+    display: none; /* 隐藏数字标签，太挤了 */
+}
+
+.entertainment-icons-grid .bg-preview.small {
+    width: 100%; /* 占满单元格宽度 */
+    height: auto;
+    aspect-ratio: 1 / 1; /* 保持正方形 */
+    margin-bottom: 10px;
+}
+
+.entertainment-icons-grid .bg-actions {
+    flex-direction: row; /* 上传/清除按钮并排显示 */
+}
 
 /* === DYNAMIC BACKGROUND STYLES (ULTIMATE CORRECTION) === */
 #my-dashboard-screen, 
