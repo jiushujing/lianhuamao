@@ -107,10 +107,34 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance
 input[type="range"]::-moz-range-track { width: 100%; height: 12px; background: linear-gradient(to right, var(--progress-bg) var(--progress), var(--track-bg) 0); border-radius: 6px; }
 input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
 
-#icon-theme { grid-column: 1 / -1; padding: 15px 0; }
-.theme-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; align-items: center; width: 75%; gap: 12px; box-sizing: border-box; }
-.theme-grid::-webkit-scrollbar { display: none; }
-.theme-swatch { width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 14px; flex-shrink: 0; }
+/* 从这里开始替换 */
+
+#icon-theme { 
+    grid-column: 1 / -1; 
+    padding: 20px 0; /* 调整了上下内边距，改变整体高度 */
+}
+.theme-grid { 
+    display: flex; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    justify-content: flex-start; 
+    align-items: center; 
+    width: 90%; /* 调整了可视区域宽度百分比 */
+    gap: 12px; 
+    box-sizing: border-box; 
+}
+.theme-grid::-webkit-scrollbar { 
+    display: none; 
+}
+.theme-swatch { 
+    width: 55px; /* 调整了方块的宽度 */
+    height: 55px; /* 调整了方块的高度 */
+    background: rgba(255,255,255,0.2); 
+    border-radius: 16px; /* 相应调整了圆角 */
+    flex-shrink: 0; 
+}
+
+/* 到这里结束替换 */
 
 .settings-page { padding: 20px; padding-top: 0; background-color: var(--secondary-bg); min-height: 100%; box-sizing: border-box; }
 .action-button { width: 100%; padding: 12px; border-radius: 8px; font-size: 16px; cursor: pointer; border: none; }
