@@ -146,7 +146,7 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 .confirm-button { display: inline-block; background-color: var(--primary-accent); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; transition: background-color 0.2s; }
 .confirm-button:hover { background-color: #0056b3; }
 
-/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED & POLISHED v2) === */
+/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED & POLISHED v3) === */
 .bg-settings-redesigned {
     display: flex;
     flex-direction: column;
@@ -198,8 +198,8 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 }
 /* Desktop Card */
 .bg-preview-label.desktop {
-    aspect-ratio: 9 / 16; /* 关键：修改为9:16的比例 */
-    height: auto; /* 移除固定高度，让比例生效 */
+    aspect-ratio: 9 / 16;
+    height: auto;
     border-radius: 20px;
 }
 /* Widget Group */
@@ -207,30 +207,32 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 .widget-group:last-child { margin-bottom: 0; }
 .widget-container {
     display: flex;
-    align-items: flex-start; /* 顶部对齐 */
-    gap: 8px; /* 关键：缩小组件间距 */
+    align-items: flex-start;
+    gap: 8px;
 }
 .widget-item {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* 关键：移除flex:1，让容器根据内容自适应 */
 }
 .widget-item:first-child {
-    flex: 1; /* 关键：只让第一个子元素(长方形)填充剩余空间 */
+    flex: 1;
 }
 .widget-item .bg-preview-label.rect {
     width: 100%;
-    height: 60px; /* 关键：直接设定高度与方形同高 */
+    height: 60px;
 }
 .widget-item .bg-preview-label.square {
     height: 60px;
     width: 60px;
 }
 .widget-item .bg-url-input.small {
-    width: 60px; /* 让URL框和上方方形图标等宽 */
+    width: 60px;
 }
-.widget-item.circle { align-items: center; }
+.widget-item.circle {
+    flex: 1; /* 关键：让唱片和API的容器平分空间 */
+    align-items: center;
+}
 .bg-preview-label.circle-outer {
     width: 80px; height: 80px; border-radius: 50%;
     background: #282828; display: flex; justify-content: center; align-items: center;
