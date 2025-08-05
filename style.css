@@ -212,96 +212,93 @@ body.manual-body {
 .confirm-button:hover {
     background-color: #0056b3;
 }
-/* === STYLES FOR BACKGROUND SETTINGS SCREEN (GRID LAYOUT) === */
-.bg-settings-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 创建一个两列的网格 */
-    gap: 15px; /* 设置网格间距 */
-    padding-top: 10px;
+/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED) === */
+.bg-settings-redesigned {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
-
-.bg-setting-group {
+.bg-card {
     background-color: var(--primary-bg);
     padding: 15px;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid var(--border-color);
-    display: flex; /* 让内部元素垂直排列 */
-    flex-direction: column;
 }
-
-/* 让桌面背景和娱乐功能组占据整行宽度 */
-.bg-settings-container > .bg-setting-group:first-child,
-#entertainment-settings-group {
-    grid-column: 1 / -1; /* 关键：让元素横跨所有列 */
-}
-
-.bg-setting-group label {
-    font-weight: 600;
+.bg-card-title {
     font-size: 16px;
-    display: block;
-    margin-bottom: 10px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
 }
-
-.bg-preview-wrapper {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    margin-top: auto; /* 将预览和按钮推到底部，实现对齐 */
-}
-
-.bg-preview {
-    width: 60px; /* 缩小一点，更精致 */
-    height: 60px;
-    border-radius: 8px;
-    object-fit: cover;
-    background-color: #e9ecef;
-    flex-shrink: 0;
-    border: 1px solid #ddd;
-}
-
-.bg-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-}
-
 .hidden-upload { display: none; }
-
-.bg-actions .action-button {
-    padding: 8px 12px;
+.bg-preview-label {
+    display: block;
+    cursor: pointer;
+    border-radius: 12px;
+    background-color: #f0f2f5;
+    border: 1px dashed #dcdfe6;
+    overflow: hidden;
+    position: relative;
+}
+.bg-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.bg-url-input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #dcdfe6;
     font-size: 14px;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+}
+.bg-url-input.small {
+    font-size: 12px;
+    padding: 8px;
     text-align: center;
 }
-
-/* === 娱乐功能图标的嵌套网格 === */
-.entertainment-icons-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 在内部创建一个四列网格 */
+/* Desktop Card */
+.bg-preview-label.desktop {
+    height: 300px;
+    border-radius: 20px;
+}
+/* Widget Group */
+.widget-group { margin-bottom: 15px; }
+.widget-group:last-child { margin-bottom: 0; }
+.widget-container {
+    display: flex;
     gap: 10px;
-    margin-top: 10px;
 }
-
-.entertainment-icons-grid .sub-group {
-    flex-direction: column; /* 让小图标垂直排列 */
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
+.widget-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
-
-.entertainment-icons-grid .sub-group-label {
-    display: none; /* 隐藏数字标签，太挤了 */
+.widget-item .bg-preview-label.rect { height: 60px; }
+.widget-item .bg-preview-label.square { height: 60px; width: 60px; }
+.widget-item.circle { align-items: center; }
+.bg-preview-label.circle-outer {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: #282828; display: flex; justify-content: center; align-items: center;
 }
-
-.entertainment-icons-grid .bg-preview.small {
-    width: 100%; /* 占满单元格宽度 */
-    height: auto;
-    aspect-ratio: 1 / 1; /* 保持正方形 */
-    margin-bottom: 10px;
+.bg-preview-label .circle-inner {
+    width: 60%; height: 60%; border-radius: 50%; background: #5a5a5a; overflow: hidden;
 }
-
-.entertainment-icons-grid .bg-actions {
-    flex-direction: row; /* 上传/清除按钮并排显示 */
+.bg-preview-label.api-circle {
+    width: 80px; height: 80px; border-radius: 50%;
+}
+/* Entertainment Grid */
+.entertainment-grid-new {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.entertainment-item { display: flex; flex-direction: column; }
+.entertainment-item .bg-preview-label {
+    height: 60px;
 }
 
 /* === DYNAMIC BACKGROUND STYLES (ULTIMATE CORRECTION) === */
