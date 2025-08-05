@@ -43,7 +43,7 @@
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>编辑角色</h2></div>
                     <form id="character-edit-form">
-                        <div class="profile-header"><label for="edit-char-avatar-upload" class="profile-pic-container"><img id="edit-char-avatar" src="" alt="头像"></label><input type="file" id="edit-char-avatar-upload" accept="image/*"><div class="form-group" style="flex-grow: 1; margin-bottom: 0;"><label for="edit-char-name">名字</label><input type="text" id="edit-char-name" placeholder="给角色起个名字"></div></div>
+                        <div class="profile-header"><label for="edit-char-avatar-upload" class="profile-pic-container"><img id="edit-char-avatar" src="" alt="头像"></label><input type="file" id="edit-char-avatar-upload" class="hidden-upload" accept="image/*"><div class="form-group" style="flex-grow: 1; margin-bottom: 0;"><label for="edit-char-name">名字</label><input type="text" id="edit-char-name" placeholder="给角色起个名字"></div></div>
                         <div class="form-group"><label for="edit-char-subtitle">简介</label><input type="text" id="edit-char-subtitle" placeholder="一句话描述角色"></div>
                         <div class="form-group"><label for="edit-char-setting">AI 系统设定 (System Prompt)</label><textarea id="edit-char-setting" placeholder="定义角色的性格、背景、说话方式等"></textarea></div>
                         <div class="btn-group"><button type="submit" class="action-button btn-primary">保存</button><button type="button" id="delete-character-btn" class="action-button btn-danger">删除角色</button></div>
@@ -61,16 +61,23 @@
             <!-- “我的”桌面 (API等全局设定) -->
             <div id="my-dashboard-screen" class="screen hidden" data-bg-target="dashboard">
                 <div class="page-header-bar"><label class="page-toggle-switch"><input type="checkbox" class="page-toggle-checkbox"><div class="toggle-track"><div class="toggle-thumb"><span>🪷</span></div></div></label></div>
-                <div class="icon-grid">
+                <div id="icon-grid" class="icon-grid">
                     <button id="icon-profile" class="icon-widget"><div class="profile-capsule-content"><img id="dashboard-profile-pic" src="" alt=""><span id="dashboard-user-name">我的设定</span></div></button>
-                    <button id="icon-background" class="icon-widget"><div class="bg-widget-container"><div class="bg-widget-top" data-bg-target="widgetBgTop"></div><div class="bg-widget-bottom"><div class="bg-widget-bottom-left" data-bg-target="widgetBgBottomLeft"></div><div class="bg-widget-bottom-right" data-bg-target="widgetBgBottomRight"></div></div></div></button>
-                    <button id="icon-api" class="icon-widget"><div class="api-widget-content"><div class="api-inner-circle" data-bg-target="apiInnerCircle"><div class="icon-display">API</div><span class="icon-label">API 设定</span></div></div></button>
+                    <div id="icon-background" class="icon-widget"><div class="bg-widget-container"><div class="bg-widget-top" data-bg-target="widgetBgTop"></div><div class="bg-widget-bottom"><div class="bg-widget-bottom-left" data-bg-target="widgetBgBottomLeft"></div><div class="bg-widget-bottom-right" data-bg-target="widgetBgBottomRight"></div></div></div></div>
+                    <button id="icon-api" class="icon-widget"><div class="api-widget-content"><div class="api-inner-circle" data-bg-target="apiInnerCircle">
+                        <input type="text" id="label-api" class="editable-widget-label" data-label-key="api" spellcheck="false">
+                    </div></div></button>
                     <button id="icon-music" class="icon-widget"><div class="music-disc"><div class="music-label" data-bg-target="musicDiscLabel"></div></div></button>
                     <div id="icon-sliders" class="icon-widget">
-                        <div class="slider-group"><label for="opacity-slider">组件透明度</label><input type="range" id="opacity-slider" min="0.1" max="1" step="0.05"></div>
-                        <div class="slider-group"><label for="brightness-slider">组件黑白度</label><input type="range" id="brightness-slider" min="0" max="100" step="1"></div>
+                        <div class="slider-group">
+                            <input type="text" id="label-opacity" class="editable-widget-label slider" data-label-key="opacity" spellcheck="false">
+                            <input type="range" id="opacity-slider" min="0.1" max="1" step="0.05">
+                        </div>
+                        <div class="slider-group">
+                            <input type="text" id="label-brightness" class="editable-widget-label slider" data-label-key="brightness" spellcheck="false">
+                            <input type="range" id="brightness-slider" min="0" max="100" step="1">
+                        </div>
                     </div>
-                    <!-- 娱乐功能组件 -->
                     <div id="icon-entertainment" class="icon-widget">
                         <div class="entertainment-grid">
                             <div class="entertainment-swatch" data-bg-target="entertainmentIcon1"></div>
@@ -123,9 +130,7 @@
             <div id="background-settings-screen" class="screen hidden">
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>背景设定</h2></div>
-                    
                     <div class="bg-settings-redesigned">
-                        <!-- 桌面背景 -->
                         <div class="bg-card">
                             <h3 class="bg-card-title">🐱 桌面</h3>
                             <label for="upload-dashboard" class="bg-preview-label desktop">
@@ -135,8 +140,6 @@
                             <input type="text" class="bg-url-input" placeholder="或在此处填写图片 URL" data-url-key="dashboard">
                             <input type="text" class="bg-url-input" placeholder="模糊度 (0-20)" data-blur-key="dashboard">
                         </div>
-
-                        <!-- 方形/圆形组件 -->
                         <div class="bg-card">
                             <div class="widget-group">
                                 <h3 class="bg-card-title">方形组件</h3>
@@ -175,8 +178,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- 娱乐组件 -->
                         <div class="bg-card">
                             <h3 class="bg-card-title">娱乐组件</h3>
                             <div class="entertainment-grid-new">
