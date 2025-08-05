@@ -119,7 +119,7 @@
     </div>
 </div>
 
-    <!-- Background Settings Screen -->
+    <!-- Background Settings Screen (Completely Overhauled) -->
 <div id="background-settings-screen" class="screen hidden">
     <div class="settings-page">
         <div class="page-header-bar"><button class="back-button">←</button><h2>背景设定</h2></div>
@@ -131,48 +131,151 @@
                 <div class="bg-preview-wrapper">
                     <img id="dashboard-bg-preview" class="bg-preview" src="" alt="桌面背景预览">
                     <div class="bg-actions">
-                        <label class="action-button btn-secondary">上传<input type="file" id="dashboard-bg-upload" accept="image/*" class="hidden-upload" data-key="dashboard"></label>
-                        <button class="action-button btn-danger" id="dashboard-bg-clear" data-key="dashboard">清除</button>
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="dashboard"></label>
+                        <button class="action-button btn-danger" data-key="dashboard">清除</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 背景组件背景 -->
+            <!-- 方块组件 - 上方长条 -->
             <div class="bg-setting-group">
-                <label>方块组件背景</label>
+                <label>方块组件 - 上方长条</label>
                 <div class="bg-preview-wrapper">
-                    <img id="widget-bg-preview" class="bg-preview" src="" alt="组件背景预览">
+                    <img id="widget-top-preview" class="bg-preview" src="" alt="预览">
                     <div class="bg-actions">
-                        <label class="action-button btn-secondary">上传<input type="file" id="widget-bg-upload" accept="image/*" class="hidden-upload" data-key="widgetBg"></label>
-                        <button class="action-button btn-danger" id="widget-bg-clear" data-key="widgetBg">清除</button>
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="widgetBgTop"></label>
+                        <button class="action-button btn-danger" data-key="widgetBgTop">清除</button>
                     </div>
                 </div>
             </div>
 
-            <!-- API图标背景 -->
+            <!-- 方块组件 - 左下方块 -->
             <div class="bg-setting-group">
-                <label>API 图标背景</label>
+                <label>方块组件 - 左下方块</label>
                 <div class="bg-preview-wrapper">
-                    <img id="api-icon-bg-preview" class="bg-preview" src="" alt="API图标背景预览">
+                    <img id="widget-bottom-left-preview" class="bg-preview" src="" alt="预览">
                     <div class="bg-actions">
-                        <label class="action-button btn-secondary">上传<input type="file" id="api-icon-bg-upload" accept="image/*" class="hidden-upload" data-key="apiIcon"></label>
-                        <button class="action-button btn-danger" id="api-icon-bg-clear" data-key="apiIcon">清除</button>
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="widgetBgBottomLeft"></label>
+                        <button class="action-button btn-danger" data-key="widgetBgBottomLeft">清除</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 主题组件背景 -->
+            <!-- 方块组件 - 右下方块 -->
             <div class="bg-setting-group">
-                <label>娱乐功能图标背景</label>
+                <label>方块组件 - 右下方块</label>
                 <div class="bg-preview-wrapper">
-                    <img id="theme-bar-bg-preview" class="bg-preview" src="" alt="娱乐功能图标背景预览">
+                    <img id="widget-bottom-right-preview" class="bg-preview" src="" alt="预览">
                     <div class="bg-actions">
-                        <label class="action-button btn-secondary">上传<input type="file" id="theme-bar-bg-upload" accept="image/*" class="hidden-upload" data-key="entertainmentIcons"></label>
-                        <button class="action-button btn-danger" id="theme-bar-bg-clear" data-key="entertainmentIcons">清除</button>
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="widgetBgBottomRight"></label>
+                        <button class="action-button btn-danger" data-key="widgetBgBottomRight">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API图标内圈 -->
+            <div class="bg-setting-group">
+                <label>API 图标内圈</label>
+                <div class="bg-preview-wrapper">
+                    <img id="api-inner-circle-preview" class="bg-preview" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="apiInnerCircle"></label>
+                        <button class="action-button btn-danger" data-key="apiInnerCircle">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 音乐唱片圆标 -->
+            <div class="bg-setting-group">
+                <label>音乐唱片圆标</label>
+                <div class="bg-preview-wrapper">
+                    <img id="music-disc-label-preview" class="bg-preview" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="musicDiscLabel"></label>
+                        <button class="action-button btn-danger" data-key="musicDiscLabel">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 娱乐功能图标 (8个) -->
+            <div class="bg-setting-group">
+                <label>娱乐功能图标 (1-8)</label>
+                <!-- Icon 1 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">1</span>
+                    <img id="entertainment-icon-1-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon1"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon1">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 2 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">2</span>
+                    <img id="entertainment-icon-2-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon2"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon2">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 3 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">3</span>
+                    <img id="entertainment-icon-3-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon3"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon3">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 4 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">4</span>
+                    <img id="entertainment-icon-4-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon4"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon4">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 5 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">5</span>
+                    <img id="entertainment-icon-5-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon5"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon5">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 6 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">6</span>
+                    <img id="entertainment-icon-6-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon6"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon6">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 7 -->
+                <div class="bg-preview-wrapper sub-group">
+                    <span class="sub-group-label">7</span>
+                    <img id="entertainment-icon-7-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon7"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon7">清除</button>
+                    </div>
+                </div>
+                <!-- Icon 8 -->
+                <div class="bg-preview-wrapper sub-group>
+                    <span class="sub-group-label">8</span>
+                    <img id="entertainment-icon-8-preview" class="bg-preview small" src="" alt="预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" accept="image/*" class="hidden-upload" data-key="entertainmentIcon8"></label>
+                        <button class="action-button btn-danger" data-key="entertainmentIcon8">清除</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
     </div>
 </div>
