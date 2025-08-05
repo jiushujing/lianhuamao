@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatScreen: document.getElementById('chat-screen'),
         profileSettingsScreen: document.getElementById('profile-settings-screen'),
         apiSettingsScreen: document.getElementById('api-settings-screen'),
-        backgroundSettingsScreen: document.getElementById('background-settings-screen')
+        backgroundSettingsScreen: document.getElementById('background-settings-screen'),
 
         // Home Screen
         characterList: document.getElementById('character-list'),
@@ -241,7 +241,6 @@ const handleImageClear = (event) => {
     dom.iconProfile.addEventListener('click', () => showScreen('profileSettings'));
     dom.iconApi.addEventListener('click', () => showScreen('apiSettings'));
     dom.bgWidgetBottomLeft.addEventListener('click', () => showScreen('backgroundSettings'));
-    dom.iconBackground.addEventListener('click', () => alert('背景设置功能正在开发中！'));
     dom.iconMusic.addEventListener('click', () => alert('音乐功能正在开发中！'));
     dom.iconTheme.addEventListener('click', (e) => {
         if (e.target.classList.contains('theme-swatch')) {
