@@ -109,29 +109,29 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
 
 /* 从这里开始替换 */
 
-#icon-theme { 
+#icon-entertainment { 
     grid-column: 1 / -1; 
-    padding: 15px 0; /* 调整了上下内边距，改变整体高度 */
+    padding: 15px 0;
 }
-.theme-grid { 
+.entertainment-grid { 
     display: flex; 
     flex-wrap: nowrap; 
     overflow-x: auto; 
     justify-content: flex-start; 
     align-items: center; 
-    width: 85%; /* 调整了可视区域宽度百分比 */
+    width: 85%;
     gap: 12px; 
     box-sizing: border-box; 
 }
-.theme-grid::-webkit-scrollbar { 
+.entertainment-grid::-webkit-scrollbar { 
     display: none; 
 }
-.theme-swatch { 
-    width: 55px; /* 调整了方块的宽度 */
-    height: 55px; /* 调整了方块的高度 */
+.entertainment-swatch { 
+    width: 55px;
+    height: 55px;
     background: rgba(255,255,255,0.2); 
-    border-radius: 16px; /* 相应调整了圆角 */
-    flex-shrink: 0; 
+    border-radius: 16px;
+    flex-shrink: 0;
 }
 
 /* 到这里结束替换 */
@@ -255,8 +255,11 @@ body.manual-body {
     text-align: center;
 }
 
-/* === DYNAMIC BACKGROUND STYLES === */
-#my-dashboard-screen, #icon-background, #icon-api, #icon-theme {
+/* === DYNAMIC BACKGROUND STYLES (CORRECTED) === */
+#my-dashboard-screen, 
+.bg-widget-top, .bg-widget-bottom-left, .bg-widget-bottom-right,
+.api-widget-content,
+.entertainment-swatch {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
