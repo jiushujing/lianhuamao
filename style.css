@@ -111,7 +111,7 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
 
 #icon-theme { 
     grid-column: 1 / -1; 
-    padding: 16px 0; /* 调整了上下内边距，改变整体高度 */
+    padding: 15px 0; /* 调整了上下内边距，改变整体高度 */
 }
 .theme-grid { 
     display: flex; 
