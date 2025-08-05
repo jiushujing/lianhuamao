@@ -115,6 +115,64 @@
         </div>
     </div>
 
+    <!-- Background Settings Screen -->
+<div id="background-settings-screen" class="screen hidden">
+    <div class="settings-page">
+        <div class="page-header-bar"><button class="back-button">←</button><h2>背景设定</h2></div>
+        
+        <div class="bg-settings-container">
+            <!-- 桌面背景 -->
+            <div class="bg-setting-group">
+                <label>🐱 桌面背景</label>
+                <div class="bg-preview-wrapper">
+                    <img id="dashboard-bg-preview" class="bg-preview" src="" alt="桌面背景预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" id="dashboard-bg-upload" accept="image/*" class="hidden-upload" data-key="dashboard"></label>
+                        <button class="action-button btn-danger" id="dashboard-bg-clear" data-key="dashboard">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 背景组件背景 -->
+            <div class="bg-setting-group">
+                <label>方块组件背景</label>
+                <div class="bg-preview-wrapper">
+                    <img id="widget-bg-preview" class="bg-preview" src="" alt="组件背景预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" id="widget-bg-upload" accept="image/*" class="hidden-upload" data-key="widgetBg"></label>
+                        <button class="action-button btn-danger" id="widget-bg-clear" data-key="widgetBg">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API图标背景 -->
+            <div class="bg-setting-group">
+                <label>API 图标背景</label>
+                <div class="bg-preview-wrapper">
+                    <img id="api-icon-bg-preview" class="bg-preview" src="" alt="API图标背景预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" id="api-icon-bg-upload" accept="image/*" class="hidden-upload" data-key="apiIcon"></label>
+                        <button class="action-button btn-danger" id="api-icon-bg-clear" data-key="apiIcon">清除</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主题组件背景 -->
+            <div class="bg-setting-group">
+                <label>底部主题栏背景</label>
+                <div class="bg-preview-wrapper">
+                    <img id="theme-bar-bg-preview" class="bg-preview" src="" alt="主题栏背景预览">
+                    <div class="bg-actions">
+                        <label class="action-button btn-secondary">上传<input type="file" id="theme-bar-bg-upload" accept="image/*" class="hidden-upload" data-key="themeBar"></label>
+                        <button class="action-button btn-danger" id="theme-bar-bg-clear" data-key="themeBar">清除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    
     <script src="script.js"></script>
 </body>
 </html>
