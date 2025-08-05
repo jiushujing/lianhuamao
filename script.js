@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInput: document.getElementById('chat-input'),
         
         // My Dashboard
+        iconGrid: document.getElementById('icon-grid'),
         dashboardProfilePic: document.getElementById('dashboard-profile-pic'),
         dashboardUserName: document.getElementById('dashboard-user-name'),
         iconProfile: document.getElementById('icon-profile'),
@@ -153,178 +154,148 @@ document.addEventListener('DOMContentLoaded', () => {
     const enterBatchDeleteMode = () => { isBatchDeleteMode = true; dom.homeScreen.classList.add('batch-delete-active'); renderCharacterList(); };
     const exitBatchDeleteMode = () => { isBatchDeleteMode = false; dom.homeScreen.classList.remove('batch-delete-active'); renderCharacterList(); };
 
-    // --- Background Settings Logic (Complete Redesign) ---
+    // --- Background Settings Logic ---
     let backgrounds = {};
-
     const generateEntertainmentItems = () => {
         const container = document.querySelector('.entertainment-grid-new');
         if (!container) return;
         container.innerHTML = '';
         for (let i = 1; i <= 8; i++) {
             const key = `entertainmentIcon${i}`;
-            const itemHTML = `
-                <div class="entertainment-item">
-                    <label for="upload-${key}" class="bg-preview-label">
-                        <img class="bg-preview-img" data-preview-key="${key}" src="">
-                    </label>
-                    <input type="file" id="upload-${key}" class="hidden-upload" data-upload-key="${key}" accept="image/*">
-                    <input type="text" class="bg-url-input small" placeholder="URL" data-url-key="${key}">
-                </div>
-            `;
-            container.innerHTML += itemHTML;
+            container.innerHTML += `<div class="entertainment-item"><label for="upload-${key}" class="bg-preview-label"><img class="bg-preview-img" data-preview-key="${key}" src=""></label><input type="file" id="upload-${key}" class="hidden-upload" data-upload-key="${key}" accept="image/*"><input type="text" class="bg-url-input small" placeholder="URL" data-url-key="${key}"></div>`;
         }
     };
-
     const applyAllBackgrounds = () => {
-        // Clear all existing styles first to handle deletions
-        document.querySelectorAll('[data-bg-target]').forEach(el => {
-            el.style.backgroundImage = '';
-        });
-        document.querySelectorAll('img[data-preview-key]').forEach(el => {
-            el.src = '';
-        });
-         document.querySelectorAll('input[data-url-key]').forEach(el => {
-            el.value = '';
-        });
+        document.querySelectorAll('[data-bg-target]').forEach(el => { el.style.backgroundImage = ''; });
+        document.querySelectorAll('img[data-preview-key]').forEach(el => { el.src = ''; });
+        document.querySelectorAll('input[data-url-key]').forEach(el => { el.value = ''; });
         const blurInput = document.querySelector('input[data-blur-key="dashboard"]');
         if (blurInput) blurInput.value = '';
 
-        // Apply saved styles
         Object.keys(backgrounds).forEach(key => {
             const config = backgrounds[key];
             if (!config) return;
-
             const targetElements = document.querySelectorAll(`[data-bg-target="${key}"]`);
-            targetElements.forEach(targetElement => {
-                 if (targetElement) {
-                    targetElement.style.backgroundImage = config.url ? `url(${config.url})` : '';
-                }
-            });
-
+            targetElements.forEach(targetElement => { if (targetElement) { targetElement.style.backgroundImage = config.url ? `url(${config.url})` : ''; } });
             const previewImg = document.querySelector(`img[data-preview-key="${key}"]`);
-            if (previewImg) {
-                previewImg.src = config.url || '';
-            }
-
+            if (previewImg) previewImg.src = config.url || '';
             const urlInput = document.querySelector(`input[data-url-key="${key}"]`);
-            if (urlInput) {
-                urlInput.value = config.url || '';
-            }
-            
+            if (urlInput) urlInput.value = config.url || '';
             if (key === 'dashboard') {
                 const blurValue = config.blur || 0;
                 if (blurInput) blurInput.value = blurValue;
-                
                 let beforeStyle = document.getElementById('dashboard-blur-style');
-                if (!beforeStyle) {
-                    beforeStyle = document.createElement('style');
-                    beforeStyle.id = 'dashboard-blur-style';
-                    document.head.appendChild(beforeStyle);
-                }
-                beforeStyle.textContent = `
-                    #my-dashboard-screen::before {
-                        backdrop-filter: blur(${blurValue}px);
-                        -webkit-backdrop-filter: blur(${blurValue}px);
-                    }
-                `;
+                if (!beforeStyle) { beforeStyle = document.createElement('style'); beforeStyle.id = 'dashboard-blur-style'; document.head.appendChild(beforeStyle); }
+                beforeStyle.textContent = `#my-dashboard-screen::before { backdrop-filter: blur(${blurValue}px); -webkit-backdrop-filter: blur(${blurValue}px); }`;
             }
         });
     };
-
-    const saveBackgrounds = () => {
-        localStorage.setItem('aiChatBackgrounds_v3', JSON.stringify(backgrounds));
-    };
-
+    const saveBackgrounds = () => { localStorage.setItem('aiChatBackgrounds_v3', JSON.stringify(backgrounds)); };
     const loadBackgrounds = () => {
         const saved = localStorage.getItem('aiChatBackgrounds_v3');
         backgrounds = saved ? JSON.parse(saved) : {};
         applyAllBackgrounds();
     };
-    
     const updateBackgroundData = (key, newValues) => {
         backgrounds[key] = { ...(backgrounds[key] || {}), ...newValues };
-        // If url is empty and blur is 0 or undefined, delete the key
-        if (!backgrounds[key].url && (!backgrounds[key].blur || backgrounds[key].blur === 0)) {
-             delete backgrounds[key];
-        }
+        if (!backgrounds[key].url && (!backgrounds[key].blur || backgrounds[key].blur === 0)) { delete backgrounds[key]; }
         saveBackgrounds();
         applyAllBackgrounds();
     };
-
     if (dom.backgroundSettingsScreen) {
         dom.backgroundSettingsScreen.addEventListener('change', (e) => {
             if (e.target.matches('input[type="file"]')) {
                 const key = e.target.dataset.uploadKey;
                 const file = e.target.files[0];
                 if (!key || !file) return;
-
                 const reader = new FileReader();
-                reader.onload = (event) => {
-                    updateBackgroundData(key, { url: event.target.result });
-                    e.target.value = ''; // Clear file input
-                };
+                reader.onload = (event) => { updateBackgroundData(key, { url: event.target.result }); e.target.value = ''; };
                 reader.readAsDataURL(file);
             } else if (e.target.matches('input[type="text"]')) {
                 const urlKey = e.target.dataset.urlKey;
                 const blurKey = e.target.dataset.blurKey;
-                
-                if (urlKey) {
-                    updateBackgroundData(urlKey, { url: e.target.value.trim() });
-                }
-                if (blurKey) {
-                    const blur = parseInt(e.target.value, 10) || 0;
-                    updateBackgroundData(blurKey, { blur: Math.max(0, Math.min(20, blur)) });
-                }
+                if (urlKey) { updateBackgroundData(urlKey, { url: e.target.value.trim() }); }
+                if (blurKey) { const blur = parseInt(e.target.value, 10) || 0; updateBackgroundData(blurKey, { blur: Math.max(0, Math.min(20, blur)) }); }
             }
         });
     }
-    
+
+    // --- Editable Label Settings ---
+    let labelSettings = {};
+    const saveLabelSettings = () => {
+        localStorage.setItem('aiChatLabelSettings', JSON.stringify(labelSettings));
+    };
+    const loadLabelSettings = () => {
+        const saved = localStorage.getItem('aiChatLabelSettings');
+        const defaults = { api: 'API 设定', opacity: '组件透明度', brightness: '组件黑白度' };
+        labelSettings = saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
+        Object.keys(labelSettings).forEach(key => {
+            const input = document.getElementById(`label-${key}`);
+            if (input) {
+                input.value = labelSettings[key];
+            }
+        });
+    };
+
     // --- Event Listeners ---
     document.querySelectorAll('.page-toggle-checkbox').forEach(box => {
         box.addEventListener('change', () => showScreen(box.checked ? 'myDashboard' : 'home'));
     });
-
     document.querySelectorAll('.back-button').forEach(btn => {
         btn.addEventListener('click', () => {
             const currentScreen = btn.closest('.screen');
-            if (['chat-screen', 'character-edit-screen'].includes(currentScreen.id)) {
-                showScreen('characterDetail');
-            } else if (['api-settings-screen', 'profile-settings-screen', 'background-settings-screen'].includes(currentScreen.id)) {
-                showScreen('myDashboard');
-            } else {
-                showScreen('home');
-            }
+            if (['chat-screen', 'character-edit-screen'].includes(currentScreen.id)) { showScreen('characterDetail'); }
+            else if (['api-settings-screen', 'profile-settings-screen', 'background-settings-screen'].includes(currentScreen.id)) { showScreen('myDashboard'); }
+            else { showScreen('home'); }
         });
     });
 
+    // Dashboard Icon Clicks
     dom.iconProfile.addEventListener('click', () => showScreen('profileSettings'));
     dom.iconApi.addEventListener('click', () => showScreen('apiSettings'));
-    dom.iconBackground.addEventListener('click', () => showScreen('backgroundSettings'));
     dom.iconMusic.addEventListener('click', () => alert('音乐功能正在开发中！'));
     dom.iconEntertainment.addEventListener('click', (e) => {
-        if (e.target.classList.contains('entertainment-swatch')) {
-            e.stopPropagation();
-            alert('娱乐功能正在开发中！');
-        }
+        if (e.target.classList.contains('entertainment-swatch')) { e.stopPropagation(); alert('娱乐功能正在开发中！'); }
     });
     dom.iconSliders.addEventListener('click', (e) => e.stopPropagation());
     
+    // UPDATED: Background Icon Click Logic
+    dom.iconBackground.addEventListener('click', (e) => {
+        // We use .closest() to check if the click happened on or inside the target element.
+        if (e.target.closest('.bg-widget-bottom-left')) {
+            showScreen('backgroundSettings');
+        } else if (e.target.closest('.bg-widget-top') || e.target.closest('.bg-widget-bottom-right')) {
+            alert('此功能待开发');
+        } else {
+            // If clicked on the widget but not on a specific part, default to opening settings
+            showScreen('backgroundSettings');
+        }
+    });
+
+    // Editable Label Listener
+    if (dom.iconGrid) {
+        dom.iconGrid.addEventListener('change', (e) => {
+            if (e.target.matches('.editable-widget-label')) {
+                const key = e.target.dataset.labelKey;
+                if (key) {
+                    labelSettings[key] = e.target.value;
+                    saveLabelSettings();
+                }
+            }
+        });
+    }
+
+    // Other listeners
     dom.menuBtn.addEventListener('click', (e) => { e.stopPropagation(); dom.dropdownMenu.style.display = dom.dropdownMenu.style.display === 'block' ? 'none' : 'block'; });
-    
     dom.dropdownMenu.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
         if (action) {
-            if (action === 'batch-delete') {
-                enterBatchDeleteMode();
-            } else if (action === 'theme') {
-                showScreen('backgroundSettings');
-            } else {
-                alert(`${e.target.textContent} 功能正在开发中！`);
-            }
+            if (action === 'batch-delete') { enterBatchDeleteMode(); }
+            else if (action === 'theme') { showScreen('backgroundSettings'); }
+            else { alert(`${e.target.textContent} 功能正在开发中！`); }
         }
         dom.dropdownMenu.style.display = 'none';
     });
-    
     document.body.addEventListener('click', () => dom.dropdownMenu.style.display = 'none');
     dom.addCharacterBtn.addEventListener('click', () => {
         const newChar = { id: Date.now(), name: 'New Character', subtitle: '', setting: '', avatar: '', history: [] };
@@ -355,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm('确定要删除这个角色吗？此操作无法撤销。')) { characters = characters.filter(c => c.id !== activeCharacterId); saveCharacters(); activeCharacterId = null; showScreen('home'); }
     });
 
+    // Profile Settings Logic
     const saveProfileSettings = () => {
         const profile = { name: dom.userNameInput.value, setting: dom.userSettingInput.value, avatar: dom.profilePic.src };
         localStorage.setItem('aiChatProfile', JSON.stringify(profile));
@@ -381,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.userNameInput.addEventListener('blur', saveProfileSettings);
     dom.userSettingInput.addEventListener('blur', saveProfileSettings);
 
+    // API Settings Logic
     const defaultModels = { openai: { "gpt-3.5-turbo": "GPT-3.5-Turbo" }, gemini: { "gemini-pro": "Gemini Pro" } };
     const restoreSelection = (modelId) => { if (!modelId) return; const optionExists = Array.from(dom.modelSelect.options).some(opt => opt.value === modelId); if (optionExists) { dom.modelSelect.value = modelId; } };
     const populateModels = (models, type) => { const group = type === 'openai' ? dom.openaiModelsGroup : dom.geminiModelsGroup; group.innerHTML = ''; for (const [id, name] of Object.entries(models)) { const option = document.createElement('option'); option.value = id; option.textContent = name; group.appendChild(option); } };
@@ -453,6 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.apiKeyInput.addEventListener('focus', () => { dom.apiKeyInput.type = 'text'; });
     dom.apiKeyInput.addEventListener('blur', () => { dom.apiKeyInput.type = 'password'; });
 
+    // Chat Logic
     const renderChatHistory = () => {
         dom.chatHistory.innerHTML = '';
         const char = characters.find(c => c.id === activeCharacterId);
@@ -525,6 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Widget Settings Logic
     const updateSliderProgress = (slider) => {
         const min = +slider.min;
         const max = +slider.max;
@@ -532,7 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const percentage = (val - min) * 100 / (max - min);
         slider.style.setProperty('--progress', `${percentage}%`);
     };
-
     const applyWidgetStyles = (opacity, brightness) => {
         const root = document.documentElement;
         root.style.setProperty('--widget-bg-lightness', `${brightness}%`);
@@ -557,12 +531,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSliderProgress(dom.opacitySlider);
         updateSliderProgress(dom.brightnessSlider);
     };
-
     const onSliderInput = (event) => {
         applyWidgetStyles(dom.opacitySlider.value, dom.brightnessSlider.value);
         updateSliderProgress(event.target);
     };
-
     dom.opacitySlider.addEventListener('input', onSliderInput);
     dom.opacitySlider.addEventListener('change', saveWidgetSettings);
     dom.brightnessSlider.addEventListener('input', onSliderInput);
@@ -574,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProfileSettings();
     loadApiSettings();
     loadWidgetSettings();
+    loadLabelSettings();
     generateEntertainmentItems();
     loadBackgrounds();
     showScreen('home');
