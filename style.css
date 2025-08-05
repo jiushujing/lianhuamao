@@ -146,28 +146,113 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 .confirm-button { display: inline-block; background-color: var(--primary-accent); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; transition: background-color 0.2s; }
 .confirm-button:hover { background-color: #0056b3; }
 
-/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED) === */
-.bg-settings-redesigned { display: flex; flex-direction: column; gap: 15px; }
-.bg-card { background-color: var(--primary-bg); padding: 15px; border-radius: 16px; border: 1px solid var(--border-color); }
-.bg-card-title { font-size: 16px; font-weight: 600; margin: 0 0 10px 0; }
-.bg-preview-label { display: block; cursor: pointer; border-radius: 12px; background-color: #f0f2f5; border: 1px dashed #dcdfe6; overflow: hidden; position: relative; }
-.bg-preview-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.bg-url-input { width: 100%; margin-top: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid #dcdfe6; font-size: 14px; box-sizing: border-box; background-color: #f8f9fa; }
-.bg-url-input.small { font-size: 12px; padding: 8px; text-align: center; }
-.bg-preview-label.desktop { height: 300px; border-radius: 20px; }
+/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED & POLISHED) === */
+.bg-settings-redesigned {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.bg-card {
+    background-color: var(--primary-bg);
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+.bg-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+}
+.hidden-upload {
+    display: none; /* 关键：彻底隐藏原生上传按钮 */
+}
+.bg-preview-label {
+    display: block;
+    cursor: pointer;
+    border-radius: 12px;
+    background-color: #f0f2f5;
+    border: 1px dashed #dcdfe6;
+    overflow: hidden;
+    position: relative;
+}
+.bg-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.bg-url-input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #dcdfe6;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+}
+.bg-url-input.small {
+    font-size: 12px;
+    padding: 8px;
+    text-align: center;
+    width: 60px; /* 关键：让URL框和上方图标等宽 */
+}
+/* Desktop Card */
+.bg-preview-label.desktop {
+    height: 300px;
+    border-radius: 20px;
+}
+/* Widget Group */
 .widget-group { margin-bottom: 15px; }
 .widget-group:last-child { margin-bottom: 0; }
-.widget-container { display: flex; gap: 10px; }
-.widget-item { flex: 1; display: flex; flex-direction: column; }
-.widget-item .bg-preview-label.rect { height: 60px; }
-.widget-item .bg-preview-label.square { height: 60px; width: 60px; }
-.widget-item.circle { align-items: center; }
-.bg-preview-label.circle-outer { width: 80px; height: 80px; border-radius: 50%; background: #282828; display: flex; justify-content: center; align-items: center; border-style: solid; }
-.bg-preview-label .circle-inner { width: 60%; height: 60%; border-radius: 50%; background: #5a5a5a; overflow: hidden; }
-.bg-preview-label.api-circle { width: 80px; height: 80px; border-radius: 50%; }
-.entertainment-grid-new { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.entertainment-item { display: flex; flex-direction: column; }
-.entertainment-item .bg-preview-label { height: 60px; }
+.widget-container {
+    display: flex;
+    gap: 10px;
+}
+.widget-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 让子元素左对齐 */
+}
+.widget-item .bg-preview-label.rect {
+    width: 100%;
+    aspect-ratio: 2 / 1; /* 关键：设置2:1的比例 */
+}
+.widget-item .bg-preview-label.square {
+    height: 60px;
+    width: 60px;
+}
+.widget-item.circle { align-items: center; } /* 圆形组件居中 */
+.bg-preview-label.circle-outer {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: #282828; display: flex; justify-content: center; align-items: center;
+    border-style: solid;
+}
+.bg-preview-label .circle-inner {
+    width: 60%; height: 60%; border-radius: 50%; background: #5a5a5a; overflow: hidden;
+}
+.bg-preview-label.api-circle {
+    width: 80px; height: 80px; border-radius: 50%;
+}
+/* Entertainment Grid */
+.entertainment-grid-new {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+.entertainment-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 让子元素左对齐 */
+}
+.entertainment-item .bg-preview-label {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* 关键：设置1:1的比例，确保是正方形 */
+}
+.entertainment-item .bg-url-input.small {
+    width: 100%; /* 在网格布局中，让它占满父容器宽度 */
+}
 
 /* === DYNAMIC BACKGROUND STYLES === */
 [data-bg-target] { background-repeat: no-repeat; background-size: cover; background-position: center; }
