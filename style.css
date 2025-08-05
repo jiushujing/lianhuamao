@@ -146,7 +146,7 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 .confirm-button { display: inline-block; background-color: var(--primary-accent); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; transition: background-color 0.2s; }
 .confirm-button:hover { background-color: #0056b3; }
 
-/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED & POLISHED) === */
+/* === STYLES FOR BACKGROUND SETTINGS SCREEN (REDESIGNED & POLISHED v2) === */
 .bg-settings-redesigned {
     display: flex;
     flex-direction: column;
@@ -164,7 +164,7 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
     margin: 0 0 10px 0;
 }
 .hidden-upload {
-    display: none; /* 关键：彻底隐藏原生上传按钮 */
+    display: none;
 }
 .bg-preview-label {
     display: block;
@@ -195,11 +195,11 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
     font-size: 12px;
     padding: 8px;
     text-align: center;
-    width: 60px; /* 关键：让URL框和上方图标等宽 */
 }
 /* Desktop Card */
 .bg-preview-label.desktop {
-    height: 300px;
+    aspect-ratio: 9 / 16; /* 关键：修改为9:16的比例 */
+    height: auto; /* 移除固定高度，让比例生效 */
     border-radius: 20px;
 }
 /* Widget Group */
@@ -207,23 +207,30 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 .widget-group:last-child { margin-bottom: 0; }
 .widget-container {
     display: flex;
-    gap: 10px;
+    align-items: flex-start; /* 顶部对齐 */
+    gap: 8px; /* 关键：缩小组件间距 */
 }
 .widget-item {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* 让子元素左对齐 */
+    align-items: flex-start;
+    /* 关键：移除flex:1，让容器根据内容自适应 */
+}
+.widget-item:first-child {
+    flex: 1; /* 关键：只让第一个子元素(长方形)填充剩余空间 */
 }
 .widget-item .bg-preview-label.rect {
     width: 100%;
-    aspect-ratio: 2 / 1; /* 关键：设置2:1的比例 */
+    height: 60px; /* 关键：直接设定高度与方形同高 */
 }
 .widget-item .bg-preview-label.square {
     height: 60px;
     width: 60px;
 }
-.widget-item.circle { align-items: center; } /* 圆形组件居中 */
+.widget-item .bg-url-input.small {
+    width: 60px; /* 让URL框和上方方形图标等宽 */
+}
+.widget-item.circle { align-items: center; }
 .bg-preview-label.circle-outer {
     width: 80px; height: 80px; border-radius: 50%;
     background: #282828; display: flex; justify-content: center; align-items: center;
@@ -244,14 +251,14 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 .entertainment-item {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* 让子元素左对齐 */
+    align-items: flex-start;
 }
 .entertainment-item .bg-preview-label {
     width: 100%;
-    aspect-ratio: 1 / 1; /* 关键：设置1:1的比例，确保是正方形 */
+    aspect-ratio: 1 / 1;
 }
 .entertainment-item .bg-url-input.small {
-    width: 100%; /* 在网格布局中，让它占满父容器宽度 */
+    width: 100%;
 }
 
 /* === DYNAMIC BACKGROUND STYLES === */
