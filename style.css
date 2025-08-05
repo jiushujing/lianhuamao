@@ -110,6 +110,7 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
 /* 从这里开始替换 */
 
 #icon-entertainment { 
+#icon-entertainment { 
     grid-column: 1 / -1; 
     padding: 15px 0;
 }
@@ -132,6 +133,11 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
     background: rgba(255,255,255,0.2); 
     border-radius: 16px;
     flex-shrink: 0;
+    /* 新增：为了让 emoji 图标居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
 }
 
 /* 到这里结束替换 */
