@@ -111,7 +111,7 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
 
 #icon-theme { 
     grid-column: 1 / -1; 
-    padding: 20px 0; /* 调整了上下内边距，改变整体高度 */
+    padding: 16px 0; /* 调整了上下内边距，改变整体高度 */
 }
 .theme-grid { 
     display: flex; 
@@ -119,7 +119,7 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
     overflow-x: auto; 
     justify-content: flex-start; 
     align-items: center; 
-    width: 90%; /* 调整了可视区域宽度百分比 */
+    width: 85%; /* 调整了可视区域宽度百分比 */
     gap: 12px; 
     box-sizing: border-box; 
 }
