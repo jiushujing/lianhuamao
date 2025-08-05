@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         iconProfile: document.getElementById('icon-profile'),
         iconApi: document.getElementById('icon-api'),
         iconBackground: document.getElementById('icon-background'),
-        iconTheme: document.getElementById('icon-theme'),
+        iconEntertainment: document.getElementById('icon-entertainment'),
         iconMusic: document.getElementById('icon-music'),
         iconSliders: document.getElementById('icon-sliders'),
         opacitySlider: document.getElementById('opacity-slider'),
@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dashboardBgPreview: document.getElementById('dashboard-bg-preview'),
         widgetBgPreview: document.getElementById('widget-bg-preview'),
         apiIconBgPreview: document.getElementById('api-icon-bg-preview'),
-        themeBarBgPreview: document.getElementById('theme-bar-bg-preview'),
+        entertainmentIconsBgPreview: document.getElementById('entertainment-icons-bg-preview'),
         bgWidgetBottomLeft: document.querySelector('.bg-widget-bottom-left'),
+        apiWidgetContent: document.querySelector('.api-widget-content'),
     };
 
     let characters = [];
@@ -161,25 +162,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const enterBatchDeleteMode = () => { isBatchDeleteMode = true; dom.homeScreen.classList.add('batch-delete-active'); renderCharacterList(); };
     const exitBatchDeleteMode = () => { isBatchDeleteMode = false; dom.homeScreen.classList.remove('batch-delete-active'); renderCharacterList(); };
 
-    // --- Background Settings Logic ---
+    // --- Background Settings Logic (CORRECTED) ---
 let backgrounds = {};
 
 const applyBackgrounds = () => {
-    const bgMap = {
-        dashboard: { element: dom.myDashboardScreen, preview: dom.dashboardBgPreview, default: 'https://images.unsplash.com/photo-1617957743097-0d20aa2ea762?q=80&w=2532&auto=format&fit=crop' },
-        widgetBg: { element: dom.iconBackground, preview: dom.widgetBgPreview, default: '' },
-        apiIcon: { element: dom.iconApi, preview: dom.apiIconBgPreview, default: '' },
-        themeBar: { element: dom.iconTheme, preview: dom.themeBarBgPreview, default: '' }
+    // 定义背景应用的目标元素
+    const targets = {
+        dashboard: [dom.myDashboardScreen],
+        widgetBg: [
+            ...document.querySelectorAll('.bg-widget-top, .bg-widget-bottom-left, .bg-widget-bottom-right')
+        ],
+        apiIcon: [dom.apiWidgetContent],
+        entertainmentIcons: [
+            ...document.querySelectorAll('.entertainment-swatch')
+        ]
     };
 
-    for (const key in bgMap) {
-        const url = backgrounds[key] || bgMap[key].default;
-        if (url) {
-            bgMap[key].element.style.backgroundImage = `url(${url})`;
-            if (bgMap[key].preview) bgMap[key].preview.src = url;
-        } else {
-            bgMap[key].element.style.backgroundImage = '';
-            if (bgMap[key].preview) bgMap[key].preview.src = '';
+    // 定义预览图
+    const previews = {
+        dashboard: dom.dashboardBgPreview,
+        widgetBg: dom.widgetBgPreview,
+        apiIcon: dom.apiIconBgPreview,
+        entertainmentIcons: dom.entertainmentIconsBgPreview
+    };
+
+    // 默认背景图
+    const defaults = {
+        dashboard: 'https://images.unsplash.com/photo-1617957743097-0d20aa2ea762?q=80&w=2532&auto=format&fit=crop'
+    };
+
+    // 循环应用背景
+    for (const key in targets) {
+        const url = backgrounds[key] || defaults[key] || '';
+        
+        // 应用到目标元素
+        if (targets[key] && targets[key].length > 0) {
+            targets[key].forEach(el => {
+                if (el) el.style.backgroundImage = url ? `url(${url})` : '';
+            });
+        }
+
+        // 更新预览图
+        if (previews[key]) {
+            previews[key].src = url;
         }
     }
 };
@@ -213,7 +238,7 @@ const handleImageClear = (event) => {
     const key = event.target.dataset.key;
     if (!key) return;
     if (confirm('确定要清除这个背景吗？')) {
-        backgrounds[key] = null; // Use null or delete backgrounds[key]
+        delete backgrounds[key]; // 使用 delete 更干净
         saveBackgrounds();
         applyBackgrounds();
     }
@@ -242,12 +267,12 @@ const handleImageClear = (event) => {
     dom.iconApi.addEventListener('click', () => showScreen('apiSettings'));
     dom.bgWidgetBottomLeft.addEventListener('click', () => showScreen('backgroundSettings'));
     dom.iconMusic.addEventListener('click', () => alert('音乐功能正在开发中！'));
-    dom.iconTheme.addEventListener('click', (e) => {
-        if (e.target.classList.contains('theme-swatch')) {
-            e.stopPropagation();
-            alert('主题功能正在开发中！');
-        }
-    });
+    dom.iconEntertainment.addEventListener('click', (e) => { // <-- 修改这里
+        if (e.target.classList.contains('entertainment-swatch')) { // <-- 修改这里
+        e.stopPropagation();
+        alert('娱乐功能正在开发中！'); // <-- 修改这里
+    }
+});
 
     dom.iconSliders.addEventListener('click', (e) => e.stopPropagation());
 
