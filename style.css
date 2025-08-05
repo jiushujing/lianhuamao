@@ -213,57 +213,25 @@ body.manual-body {
     background-color: #0056b3;
 }
 /* === STYLES FOR BACKGROUND SETTINGS SCREEN === */
-.bg-settings-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-top: 10px;
-}
-.bg-setting-group {
-    background-color: var(--primary-bg);
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-}
-.bg-setting-group label {
-    font-weight: 600;
-    font-size: 16px;
-    display: block;
-    margin-bottom: 10px;
-}
-.bg-preview-wrapper {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-.bg-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    object-fit: cover;
-    background-color: #e9ecef;
-    flex-shrink: 0;
-    border: 1px solid #ddd;
-}
-.bg-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-}
-.hidden-upload {
-    display: none;
-}
-.bg-actions .action-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    text-align: center;
-}
+.bg-settings-container { display: flex; flex-direction: column; gap: 20px; padding-top: 10px; }
+.bg-setting-group { background-color: var(--primary-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); }
+.bg-setting-group label { font-weight: 600; font-size: 16px; display: block; margin-bottom: 10px; }
+.bg-preview-wrapper { display: flex; gap: 15px; align-items: center; }
+.bg-preview { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; background-color: #e9ecef; flex-shrink: 0; border: 1px solid #ddd; }
+.bg-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.hidden-upload { display: none; }
+.bg-actions .action-button { padding: 8px 12px; font-size: 14px; text-align: center; }
+/* New styles for sub-groups */
+.sub-group { margin-top: 15px; padding-top: 15px; border-top: 1px solid #f0f0f0; }
+.sub-group:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+.sub-group-label { font-size: 14px; color: #6c757d; width: 20px; text-align: center; flex-shrink: 0; }
+.bg-preview.small { width: 50px; height: 50px; }
 
-/* === DYNAMIC BACKGROUND STYLES (CORRECTED) === */
+/* === DYNAMIC BACKGROUND STYLES (ULTIMATE CORRECTION) === */
 #my-dashboard-screen, 
 .bg-widget-top, .bg-widget-bottom-left, .bg-widget-bottom-right,
-.api-widget-content,
+.api-inner-circle, /* Corrected Target */
+.music-label, /* New Target */
 .entertainment-swatch {
     background-repeat: no-repeat;
     background-size: cover;
