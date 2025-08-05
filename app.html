@@ -59,7 +59,7 @@
             </div>
 
             <!-- “我的”桌面 (API等全局设定) -->
-            <div id="my-dashboard-screen" class="screen hidden">
+            <div id="my-dashboard-screen" class="screen hidden" data-bg-target="dashboard">
                 <div class="page-header-bar"><label class="page-toggle-switch"><input type="checkbox" class="page-toggle-checkbox"><div class="toggle-track"><div class="toggle-thumb"><span>🪷</span></div></div></label></div>
                 <div class="icon-grid">
                     <button id="icon-profile" class="icon-widget"><div class="profile-capsule-content"><img id="dashboard-profile-pic" src="" alt=""><span id="dashboard-user-name">我的设定</span></div></button>
@@ -93,7 +93,7 @@
                     <form id="profile-form">
                         <div class="profile-header">
                             <label for="profile-pic-upload" class="profile-pic-container"><img id="profile-pic" src="" alt="头像"></label>
-                            <input type="file" id="profile-pic-upload" accept="image/*">
+                            <input type="file" id="profile-pic-upload" class="hidden-upload" accept="image/*">
                             <div class="form-group" style="flex-grow: 1; margin-bottom: 0;"><label for="user-name">我的名字</label><input type="text" id="user-name" placeholder="起个名字吧"></div>
                         </div>
                         <div class="form-group"><label for="user-setting">我的设定</label><textarea id="user-setting" placeholder="关于我，你想让AI知道什么？"></textarea></div>
