@@ -226,16 +226,16 @@ const handleImageClear = (event) => {
 
     document.querySelectorAll('.back-button').forEach(btn => {
         btn.addEventListener('click', () => {
-            const currentScreen = btn.closest('.screen');
-            if (['chat-screen', 'character-edit-screen'].includes(currentScreen.id)) {
-                showScreen('characterDetail');
-            } else if (['api-settings-screen', 'profile-settings-screen'].includes(currentScreen.id)) {
-                showScreen('myDashboard');
-            } else {
-                showScreen('home');
-            }
-        });
+        const currentScreen = btn.closest('.screen');
+        if (['chat-screen', 'character-edit-screen'].includes(currentScreen.id)) {
+            showScreen('characterDetail');
+        } else if (['api-settings-screen', 'profile-settings-screen', 'background-settings-screen'].includes(currentScreen.id)) { // <-- 修改这里
+            showScreen('myDashboard');
+        } else {
+            showScreen('home');
+        }
     });
+});
 
     // Icon click listeners
     dom.iconProfile.addEventListener('click', () => showScreen('profileSettings'));
