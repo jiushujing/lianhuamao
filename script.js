@@ -194,6 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadBackgrounds = () => {
         const saved = localStorage.getItem('aiChatBackgrounds_v3');
         backgrounds = saved ? JSON.parse(saved) : {};
+        
+        // 关键修改 1: 设置API图标的默认背景
+        if (!backgrounds.apiInnerCircle || !backgrounds.apiInnerCircle.url) {
+            backgrounds.apiInnerCircle = { ...backgrounds.apiInnerCircle, url: 'https://sharkpan.xyz/f/wXeeHq/lantu' };
+        }
+
         applyAllBackgrounds();
     };
     const updateBackgroundData = (key, newValues) => {
@@ -227,7 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const loadLabelSettings = () => {
         const saved = localStorage.getItem('aiChatLabelSettings');
-        const defaults = { api: 'API 设定', opacity: '组件透明度', brightness: '组件黑白度' };
+        // 关键修改 2: API标签默认值变为空字符串
+        const defaults = { api: '', opacity: '组件透明度', brightness: '组件黑白度' };
         labelSettings = saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
         Object.keys(labelSettings).forEach(key => {
             const input = document.getElementById(`label-${key}`);
@@ -259,17 +266,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     dom.iconSliders.addEventListener('click', (e) => e.stopPropagation());
     
-    // UPDATED: Background Icon Click Logic
+    // 关键修改 3: 修复方形组件的点击逻辑
     dom.iconBackground.addEventListener('click', (e) => {
-        // We use .closest() to check if the click happened on or inside the target element.
         if (e.target.closest('.bg-widget-bottom-left')) {
             showScreen('backgroundSettings');
         } else if (e.target.closest('.bg-widget-top') || e.target.closest('.bg-widget-bottom-right')) {
             alert('此功能待开发');
-        } else {
-            // If clicked on the widget but not on a specific part, default to opening settings
-            showScreen('backgroundSettings');
         }
+        // 移除了错误的 else 分支，点击空白区域不再有任何反应
     });
 
     // Editable Label Listener
@@ -285,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Other listeners
+    // Other listeners (unchanged)
     dom.menuBtn.addEventListener('click', (e) => { e.stopPropagation(); dom.dropdownMenu.style.display = dom.dropdownMenu.style.display === 'block' ? 'none' : 'block'; });
     dom.dropdownMenu.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
