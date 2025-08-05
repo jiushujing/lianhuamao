@@ -265,3 +265,27 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 
 /* === DYNAMIC BACKGROUND STYLES === */
 [data-bg-target] { background-repeat: no-repeat; background-size: cover; background-position: center; }
+
+/* === STYLES FOR EDITABLE WIDGET LABELS === */
+.editable-widget-label {
+    background: transparent;
+    border: none;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: text;
+}
+.editable-widget-label.slider {
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+#label-api {
+    font-size: 12px;
+    margin-top: 8px;
+}
+
