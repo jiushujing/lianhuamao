@@ -111,7 +111,12 @@ input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
 .entertainment-grid::-webkit-scrollbar { display: none; }
 .entertainment-swatch { width: 55px; height: 55px; background: rgba(255,255,255,0.2); border-radius: 16px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; font-size: 28px; }
 
-.settings-page { padding: 20px; padding-top: 0; background-color: var(--secondary-bg); min-height: 100%; box-sizing: border-box; }
+.settings-page {
+    padding: 0 20px calc(env(safe-area-inset-bottom, 0px) + 20px);
+    background-color: var(--secondary-bg);
+    min-height: 100%;
+    box-sizing: border-box;
+}
 .action-button { width: 100%; padding: 12px; border-radius: 8px; font-size: 16px; cursor: pointer; border: none; }
 .btn-primary { background-color: var(--primary-accent); color: white; }
 .btn-secondary { background-color: #6c757d; color: white; }
