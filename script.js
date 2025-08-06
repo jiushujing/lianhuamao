@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         brightnessSlider: document.getElementById('brightness-slider'),
 
         // Profile & API Settings Elements
-        profileForm: document.getElementById('profile-form'),
         userNameInput: document.getElementById('user-name'),
         userSettingInput: document.getElementById('user-setting'),
         profilePic: document.getElementById('profile-pic'),
@@ -84,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeCharacterId = null;
     let isBatchDeleteMode = false;
     let currentApiType = 'openai';
-    let currentView = 'space'; // NEW: State for main view: 'chat', 'space', 'dashboard'
+    let currentView = 'space'; // 'chat', 'space', 'dashboard'
 
     // --- Data Management ---
     const saveCharacters = () => localStorage.setItem('aiChatCharacters', JSON.stringify(characters));
@@ -93,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         characters = saved ? JSON.parse(saved) : [{ id: Date.now(), name: 'Helpful Assistant', subtitle: 'Your default AI companion.', setting: 'You are a helpful assistant.', avatar: '', history: [] }];
         if (!saved) saveCharacters();
         activeCharacterId = parseInt(sessionStorage.getItem('activeCharacterId')) || (characters.length > 0 ? characters[0].id : null);
-        sessionStorage.setItem('activeCharacterId', activeCharacterId);
+        if (activeCharacterId) sessionStorage.setItem('activeCharacterId', activeCharacterId);
     };
 
     // --- Rendering ---
@@ -119,34 +118,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- NEW: Main View Management ---
+    // --- View Management ---
     const updateView = (view) => {
+        if (!['chat', 'space', 'dashboard'].includes(view)) return;
         currentView = view;
         const body = document.body;
         body.classList.remove('view-chat', 'view-space', 'view-dashboard');
         body.classList.add(`view-${view}`);
 
-        // Hide all main screens first
-        dom.chatScreen.classList.add('hidden');
-        dom.homeScreen.classList.add('hidden');
-        dom.myDashboardScreen.classList.add('hidden');
+        document.querySelectorAll('.main-screen').forEach(s => s.classList.add('hidden'));
         
-        // Show the correct main screen
-        if (view === 'chat') {
-            dom.chatScreen.classList.remove('hidden');
-            renderChatHistory();
-        } else if (view === 'space') {
-            dom.homeScreen.classList.remove('hidden');
-            renderCharacterList();
-        } else if (view === 'dashboard') {
-            dom.myDashboardScreen.classList.remove('hidden');
-        }
+        const screenMap = {
+            chat: dom.chatScreen,
+            space: dom.homeScreen,
+            dashboard: dom.myDashboardScreen
+        };
+        screenMap[view].classList.remove('hidden');
+
+        if (view === 'chat') renderChatHistory();
+        if (view === 'space') renderCharacterList();
     };
 
-    // --- Sub-Screen Navigation ---
     const showSubScreen = (screenName) => {
         if (isBatchDeleteMode) exitBatchDeleteMode();
-        document.querySelectorAll('.sub-screen').forEach(s => s.classList.add('hidden'));
         
         const screenMap = {
             characterDetail: dom.characterDetailScreen,
@@ -157,20 +151,27 @@ document.addEventListener('DOMContentLoaded', () => {
             chatSettings: dom.chatSettingsScreen,
         };
         
-        if (screenMap[screenName]) {
-            if (screenName === 'characterDetail' && activeCharacterId) {
-                const char = characters.find(c => c.id === activeCharacterId);
-                dom.detailAvatar.src = char.avatar || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                dom.detailName.textContent = char.name;
-            } else if (screenName === 'characterEdit' && activeCharacterId) {
-                const char = characters.find(c => c.id === activeCharacterId);
-                dom.editCharAvatar.src = char.avatar || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-                dom.editCharName.value = char.name;
-                dom.editCharSubtitle.value = char.subtitle || '';
-                dom.editCharSetting.value = char.setting;
-            }
-            screenMap[screenName].classList.remove('hidden');
+        const screenToShow = screenMap[screenName];
+        if (!screenToShow) return;
+
+        // Hide all other sub-screens first
+        Object.values(screenMap).forEach(s => {
+            if (s !== screenToShow) s.classList.add('hidden');
+        });
+
+        // Prepare and show the target sub-screen
+        if (screenName === 'characterDetail' && activeCharacterId) {
+            const char = characters.find(c => c.id === activeCharacterId);
+            dom.detailAvatar.src = char.avatar || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+            dom.detailName.textContent = char.name;
+        } else if (screenName === 'characterEdit' && activeCharacterId) {
+            const char = characters.find(c => c.id === activeCharacterId);
+            dom.editCharAvatar.src = char.avatar || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+            dom.editCharName.value = char.name;
+            dom.editCharSubtitle.value = char.subtitle || '';
+            dom.editCharSetting.value = char.setting;
         }
+        screenToShow.classList.remove('hidden');
     };
 
     // --- Batch Delete Mode ---
@@ -261,18 +262,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     document.querySelectorAll('.page-toggle-switch').forEach(toggle => {
-        toggle.addEventListener('click', () => {
-            const sequence = ['chat', 'space', 'dashboard'];
-            const currentIndex = sequence.indexOf(currentView);
-            const nextIndex = (currentIndex + 1) % sequence.length;
-            updateView(sequence[nextIndex]);
+        toggle.addEventListener('click', (e) => {
+            const icon = e.target.closest('.toggle-icon');
+            if (icon && icon.dataset.view) {
+                updateView(icon.dataset.view);
+            }
         });
     });
 
     document.querySelectorAll('.back-button').forEach(btn => {
         btn.addEventListener('click', () => {
-            btn.closest('.screen').classList.add('hidden');
-            // No need to call updateView, just hide the sub-screen
+            btn.closest('.screen.sub-screen').classList.add('hidden');
         });
     });
 
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         dom.dropdownMenu.style.display = 'none';
     });
-    document.body.addEventListener('click', () => dom.dropdownMenu.style.display = 'none');
+    document.body.addEventListener('click', () => { if(dom.dropdownMenu) dom.dropdownMenu.style.display = 'none' });
     dom.addCharacterBtn.addEventListener('click', () => {
         const newChar = { id: Date.now(), name: 'New Character', subtitle: '', setting: '', avatar: '', history: [] };
         characters.push(newChar); saveCharacters(); activeCharacterId = newChar.id; showSubScreen('characterEdit');
@@ -334,6 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); const char = characters.find(c => c.id === activeCharacterId);
         if (char) { char.name = dom.editCharName.value; char.subtitle = dom.editCharSubtitle.value; char.setting = dom.editCharSetting.value; char.avatar = dom.editCharAvatar.src; saveCharacters(); }
         dom.characterEditScreen.classList.add('hidden');
+        renderCharacterList(); // Refresh the list in case name changed
     });
     dom.deleteCharacterBtn.addEventListener('click', () => {
         if (confirm('确定要删除这个角色吗？此操作无法撤销。')) {
@@ -478,8 +479,10 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userMessage = dom.chatInput.value.trim();
-        if (!userMessage || !activeCharacterId) {
-            if(!activeCharacterId) alert("请先在'🪷空间'页面选择一个角色。");
+        if (!userMessage) return;
+        if (!activeCharacterId) {
+            alert("请先在'🪷空间'页面选择一个角色。");
+            updateView('space');
             return;
         }
         const char = characters.find(c => c.id === activeCharacterId);
@@ -553,6 +556,9 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.brightnessSlider.addEventListener('change', saveWidgetSettings);
 
     // --- Initial Load ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialView = urlParams.get('view') || 'space';
+
     loadCharacters();
     loadProfileSettings();
     loadApiSettings();
@@ -560,5 +566,5 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLabelSettings();
     generateEntertainmentItems();
     loadBackgrounds();
-    updateView('space'); // Start on the space view
+    updateView(initialView);
 });
