@@ -5,20 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const dom = {
-        // Main Screens
+        phoneContainer: document.getElementById('phone-container'), // 新增
+        // Screens
         homeScreen: document.getElementById('home-screen'),
-        chatScreen: document.getElementById('chat-screen'),
         myDashboardScreen: document.getElementById('my-dashboard-screen'),
-
-        // Sub Screens
         characterDetailScreen: document.getElementById('character-detail-screen'),
         characterEditScreen: document.getElementById('character-edit-screen'),
+        chatScreen: document.getElementById('chat-screen'),
         profileSettingsScreen: document.getElementById('profile-settings-screen'),
         apiSettingsScreen: document.getElementById('api-settings-screen'),
         backgroundSettingsScreen: document.getElementById('background-settings-screen'),
-        chatSettingsScreen: document.getElementById('chat-settings-screen'),
+        promptsScreen: document.getElementById('prompts-screen'),
+        spaceScreen: document.getElementById('space-screen'),
 
-        // Space Screen (Home) Elements
+        // Home Screen
         characterList: document.getElementById('character-list'),
         addCharacterBtn: document.getElementById('add-character-btn'),
         menuBtn: document.getElementById('menu-btn'),
@@ -27,14 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         batchDeleteFooter: document.getElementById('batch-delete-footer'),
         deleteSelectedBtn: document.getElementById('delete-selected-btn'),
         cancelDeleteBtn: document.getElementById('cancel-delete-btn'),
-
-        // Chat Screen Elements
-        chatHeaderTitle: document.getElementById('chat-header-title'), // This was missing before
-        chatHistory: document.getElementById('chat-history'),
-        chatForm: document.getElementById('chat-form'),
-        chatInput: document.getElementById('chat-input'),
-        manualBtn: document.getElementById('manual-btn'),
-        chatSettingsBtn: document.getElementById('chat-settings-btn'),
 
         // Character Detail Screen
         detailAvatar: document.getElementById('detail-avatar'),
@@ -50,6 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
         editCharSubtitle: document.getElementById('edit-char-subtitle'),
         editCharSetting: document.getElementById('edit-char-setting'),
         deleteCharacterBtn: document.getElementById('delete-character-btn'),
+
+        // Chat Screen
+        chatHeaderTitle: document.getElementById('chat-header-title'),
+        chatHistory: document.getElementById('chat-history'),
+        chatForm: document.getElementById('chat-form'),
+        chatInput: document.getElementById('chat-input'),
         
         // My Dashboard
         iconGrid: document.getElementById('icon-grid'),
@@ -65,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         brightnessSlider: document.getElementById('brightness-slider'),
 
         // Profile & API Settings Elements
+        profileForm: document.getElementById('profile-form'),
         userNameInput: document.getElementById('user-name'),
         userSettingInput: document.getElementById('user-setting'),
         profilePic: document.getElementById('profile-pic'),
@@ -78,13 +77,17 @@ document.addEventListener('DOMContentLoaded', () => {
         btnGemini: document.getElementById('btn-gemini'),
         openaiModelsGroup: document.getElementById('openai-models'),
         geminiModelsGroup: document.getElementById('gemini-models'),
+
+        // 悬浮球 (FAB)
+        fabContainer: document.getElementById('fab-container'),
+        fabToggleBtn: document.getElementById('fab-toggle-btn'),
+        fabMenu: document.getElementById('fab-menu'),
     };
 
     let characters = [];
     let activeCharacterId = null;
     let isBatchDeleteMode = false;
     let currentApiType = 'openai';
-    let currentView = 'space'; // 'chat', 'space', 'dashboard'
 
     // --- Data Management ---
     const saveCharacters = () => localStorage.setItem('aiChatCharacters', JSON.stringify(characters));
@@ -92,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const saved = localStorage.getItem('aiChatCharacters');
         characters = saved ? JSON.parse(saved) : [{ id: Date.now(), name: 'Helpful Assistant', subtitle: 'Your default AI companion.', setting: 'You are a helpful assistant.', avatar: '', history: [] }];
         if (!saved) saveCharacters();
-        activeCharacterId = parseInt(sessionStorage.getItem('activeCharacterId')) || (characters.length > 0 ? characters[0].id : null);
-        if (activeCharacterId) sessionStorage.setItem('activeCharacterId', activeCharacterId);
+        activeCharacterId = parseInt(sessionStorage.getItem('activeCharacterId')) || null;
     };
 
     // --- Rendering ---
@@ -111,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.addEventListener('click', () => { 
                     activeCharacterId = char.id; 
                     sessionStorage.setItem('activeCharacterId', activeCharacterId);
-                    updateView('chat'); 
+                    showScreen('characterDetail'); 
                 });
             }
             item.innerHTML = content;
@@ -119,48 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- View Management ---
-    const updateView = (view) => {
-        if (!['chat', 'space', 'dashboard'].includes(view)) return;
-        currentView = view;
-        const body = document.body;
-        body.classList.remove('view-chat', 'view-space', 'view-dashboard');
-        body.classList.add(`view-${view}`);
-
-        document.querySelectorAll('.main-screen').forEach(s => s.classList.add('hidden'));
+    // --- Navigation & State ---
+    const showScreen = (screenName) => {
+        if (isBatchDeleteMode && screenName !== 'home') exitBatchDeleteMode();
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
         
-        const screenMap = {
-            chat: dom.chatScreen,
-            space: dom.homeScreen,
-            dashboard: dom.myDashboardScreen
-        };
-        screenMap[view].classList.remove('hidden');
-
-        if (view === 'chat') renderChatHistory();
-        if (view === 'space') renderCharacterList();
-    };
-
-    const showSubScreen = (screenName) => {
-        if (isBatchDeleteMode) exitBatchDeleteMode();
-        
-        const screenMap = {
-            characterDetail: dom.characterDetailScreen,
-            characterEdit: dom.characterEditScreen,
-            apiSettings: dom.apiSettingsScreen,
-            profileSettings: dom.profileSettingsScreen,
-            backgroundSettings: dom.backgroundSettingsScreen,
-            chatSettings: dom.chatSettingsScreen,
-        };
-        
-        const screenToShow = screenMap[screenName];
-        if (!screenToShow) return;
-
-        // Hide all other sub-screens first
-        Object.values(screenMap).forEach(s => {
-            if (s !== screenToShow) s.classList.add('hidden');
-        });
-
-        // Prepare and show the target sub-screen
         if (screenName === 'characterDetail' && activeCharacterId) {
             const char = characters.find(c => c.id === activeCharacterId);
             dom.detailAvatar.src = char.avatar || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
@@ -171,15 +136,27 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.editCharName.value = char.name;
             dom.editCharSubtitle.value = char.subtitle || '';
             dom.editCharSetting.value = char.setting;
+        } else if (screenName === 'chat') {
+            const char = characters.find(c => c.id === activeCharacterId);
+            dom.chatHeaderTitle.textContent = char ? char.name : '与 AI 聊天';
+            renderChatHistory();
         }
-        screenToShow.classList.remove('hidden');
+
+        const screenMap = {
+            home: dom.homeScreen, myDashboard: dom.myDashboardScreen, characterDetail: dom.characterDetailScreen,
+            characterEdit: dom.characterEditScreen, chat: dom.chatScreen, apiSettings: dom.apiSettingsScreen,
+            profileSettings: dom.profileSettingsScreen, backgroundSettings: dom.backgroundSettingsScreen,
+            prompts: dom.promptsScreen, space: dom.spaceScreen
+        };
+        if (screenMap[screenName]) screenMap[screenName].classList.remove('hidden');
+        if (screenName === 'home') renderCharacterList();
     };
 
     // --- Batch Delete Mode ---
     const enterBatchDeleteMode = () => { isBatchDeleteMode = true; dom.homeScreen.classList.add('batch-delete-active'); renderCharacterList(); };
     const exitBatchDeleteMode = () => { isBatchDeleteMode = false; dom.homeScreen.classList.remove('batch-delete-active'); renderCharacterList(); };
 
-    // --- Background Settings Logic (unchanged) ---
+    // --- Background Settings Logic ---
     let backgrounds = {};
     const generateEntertainmentItems = () => {
         const container = document.querySelector('.entertainment-grid-new');
@@ -248,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Editable Label Settings (unchanged) ---
+    // --- Editable Label Settings ---
     let labelSettings = {};
     const saveLabelSettings = () => { localStorage.setItem('aiChatLabelSettings', JSON.stringify(labelSettings)); };
     const loadLabelSettings = () => {
@@ -262,33 +239,138 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Event Listeners ---
-    document.querySelectorAll('.page-toggle-switch').forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
-            const icon = e.target.closest('.toggle-icon');
-            if (icon && icon.dataset.view) {
-                updateView(icon.dataset.view);
+    document.querySelectorAll('.back-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const fromScreen = btn.closest('.screen');
+            if (!fromScreen) return;
+            const fromScreenId = fromScreen.id;
+
+            // 子页面的特定返回逻辑
+            if (fromScreenId === 'character-edit-screen') {
+                showScreen('characterDetail');
+            } else if (fromScreenId === 'character-detail-screen') {
+                showScreen('home');
+            } else if (['profile-settings-screen', 'background-settings-screen'].includes(fromScreenId)) {
+                showScreen('myDashboard');
+            }
+            // 主层级页面统一返回到聊天页
+            else {
+                showScreen('chat');
             }
         });
     });
+    
+    // --- Draggable FAB Logic ---
+    let isDragging = false;
+    let wasDragged = false;
+    let startX, startY;
+    let initialFabX, initialFabY;
+    const dragThreshold = 5;
 
-    document.querySelectorAll('.back-button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            btn.closest('.screen.sub-screen').classList.add('hidden');
-        });
+    const onPointerDown = (e) => {
+        if (e.button !== 0) return; // 只响应鼠标左键
+        e.preventDefault();
+        
+        isDragging = true;
+        wasDragged = false;
+        
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        initialFabX = dom.fabContainer.offsetLeft;
+        initialFabY = dom.fabContainer.offsetTop;
+
+        dom.fabContainer.classList.add('dragging');
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+    };
+
+    const onPointerMove = (e) => {
+        if (!isDragging) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if (!wasDragged && (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold)) {
+            wasDragged = true;
+            // 如果开始拖动，则强制关闭可能已打开的菜单
+            dom.fabContainer.classList.remove('active');
+        }
+        
+        if (wasDragged) {
+            let newX = initialFabX + dx;
+            let newY = initialFabY + dy;
+
+            // 边界检测
+            const containerRect = dom.phoneContainer.getBoundingClientRect();
+            const fabRect = dom.fabContainer.getBoundingClientRect();
+            
+            newX = Math.max(0, Math.min(newX, containerRect.width - fabRect.width));
+            newY = Math.max(0, Math.min(newY, containerRect.height - fabRect.height));
+
+            dom.fabContainer.style.left = `${newX}px`;
+            dom.fabContainer.style.top = `${newY}px`;
+            dom.fabContainer.style.right = 'auto';
+            dom.fabContainer.style.bottom = 'auto';
+        }
+    };
+
+    const onPointerUp = () => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        dom.fabContainer.classList.remove('dragging');
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+
+        if (wasDragged) {
+            // 拖动结束，执行吸附
+            const containerWidth = dom.phoneContainer.clientWidth;
+            const fabCenter = dom.fabContainer.offsetLeft + dom.fabContainer.offsetWidth / 2;
+
+            if (fabCenter < containerWidth / 2) {
+                dom.fabContainer.style.left = '25px';
+            } else {
+                dom.fabContainer.style.left = 'auto';
+                dom.fabContainer.style.right = '25px';
+            }
+        } else {
+            // 这是一个点击，切换菜单
+            dom.fabContainer.classList.toggle('active');
+        }
+    };
+
+    dom.fabToggleBtn.addEventListener('pointerdown', onPointerDown);
+
+    dom.fabMenu.addEventListener('click', (e) => {
+        const targetButton = e.target.closest('.fab-button');
+        if (targetButton) {
+            const targetScreen = targetButton.dataset.targetScreen;
+            showScreen(targetScreen);
+        }
     });
 
-    // Chat Screen Header Buttons
-    dom.chatSettingsBtn.addEventListener('click', () => showSubScreen('chatSettings'));
+    document.getElementById('screen-container').addEventListener('click', () => {
+        if (dom.fabContainer.classList.contains('active')) {
+            dom.fabContainer.classList.remove('active');
+        }
+    });
 
     // Dashboard Icon Clicks
-    dom.iconProfile.addEventListener('click', () => showSubScreen('profileSettings'));
-    dom.iconApi.addEventListener('click', () => showSubScreen('apiSettings'));
+    dom.iconProfile.addEventListener('click', () => showScreen('profileSettings'));
+    dom.iconApi.style.cursor = 'default';
     dom.iconMusic.addEventListener('click', () => alert('音乐功能正在开发中！'));
-    dom.iconEntertainment.addEventListener('click', (e) => { if (e.target.classList.contains('entertainment-swatch')) { e.stopPropagation(); alert('娱乐功能正在开发中！'); } });
+    dom.iconEntertainment.addEventListener('click', (e) => {
+        if (e.target.classList.contains('entertainment-swatch')) { e.stopPropagation(); alert('娱乐功能正在开发中！'); }
+    });
     dom.iconSliders.addEventListener('click', (e) => e.stopPropagation());
     dom.iconBackground.addEventListener('click', (e) => {
-        if (e.target.closest('.bg-widget-bottom-left')) { showSubScreen('backgroundSettings'); } 
-        else if (e.target.closest('.bg-widget-top') || e.target.closest('.bg-widget-bottom-right')) { alert('此功能待开发'); }
+        if (e.target.closest('.bg-widget-bottom-left')) {
+            showScreen('backgroundSettings');
+        } else if (e.target.closest('.bg-widget-top') || e.target.closest('.bg-widget-bottom-right')) {
+            alert('此功能待开发');
+        }
     });
 
     // Editable Label Listener
@@ -296,26 +378,30 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.iconGrid.addEventListener('change', (e) => {
             if (e.target.matches('.editable-widget-label')) {
                 const key = e.target.dataset.labelKey;
-                if (key) { labelSettings[key] = e.target.value; saveLabelSettings(); }
+                if (key) {
+                    labelSettings[key] = e.target.value;
+                    saveLabelSettings();
+                }
             }
         });
     }
 
-    // Other listeners (Home Screen)
+    // Other listeners
     dom.menuBtn.addEventListener('click', (e) => { e.stopPropagation(); dom.dropdownMenu.style.display = dom.dropdownMenu.style.display === 'block' ? 'none' : 'block'; });
     dom.dropdownMenu.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
         if (action) {
             if (action === 'batch-delete') { enterBatchDeleteMode(); }
-             else if (action === 'theme') { showSubScreen('backgroundSettings'); }
+            else if (action === 'theme') { showScreen('backgroundSettings'); }
+            else if (action === 'prompts') { showScreen('prompts'); }
             else { alert(`${e.target.textContent} 功能正在开发中！`); }
         }
         dom.dropdownMenu.style.display = 'none';
     });
-    document.body.addEventListener('click', () => { if(dom.dropdownMenu) dom.dropdownMenu.style.display = 'none' });
+    document.body.addEventListener('click', () => dom.dropdownMenu.style.display = 'none');
     dom.addCharacterBtn.addEventListener('click', () => {
         const newChar = { id: Date.now(), name: 'New Character', subtitle: '', setting: '', avatar: '', history: [] };
-        characters.push(newChar); saveCharacters(); activeCharacterId = newChar.id; showSubScreen('characterEdit');
+        characters.push(newChar); saveCharacters(); activeCharacterId = newChar.id; showScreen('characterEdit');
     });
     dom.cancelDeleteBtn.addEventListener('click', exitBatchDeleteMode);
     dom.deleteSelectedBtn.addEventListener('click', () => {
@@ -327,32 +413,22 @@ document.addEventListener('DOMContentLoaded', () => {
             saveCharacters(); exitBatchDeleteMode();
         }
     });
-
-    // Sub-Screen buttons
-    dom.goToChatBtn.addEventListener('click', () => updateView('chat'));
-    dom.goToEditBtn.addEventListener('click', () => showSubScreen('characterEdit'));
+    dom.goToChatBtn.addEventListener('click', () => showScreen('chat'));
+    dom.goToEditBtn.addEventListener('click', () => showScreen('characterEdit'));
     dom.characterEditForm.addEventListener('submit', (e) => {
         e.preventDefault(); const char = characters.find(c => c.id === activeCharacterId);
         if (char) { char.name = dom.editCharName.value; char.subtitle = dom.editCharSubtitle.value; char.setting = dom.editCharSetting.value; char.avatar = dom.editCharAvatar.src; saveCharacters(); }
-        dom.characterEditScreen.classList.add('hidden');
-        renderCharacterList(); // Refresh the list in case name changed
-    });
-    dom.deleteCharacterBtn.addEventListener('click', () => {
-        if (confirm('确定要删除这个角色吗？此操作无法撤销。')) {
-            characters = characters.filter(c => c.id !== activeCharacterId);
-            saveCharacters();
-            activeCharacterId = characters.length > 0 ? characters[0].id : null;
-            sessionStorage.setItem('activeCharacterId', activeCharacterId);
-            dom.characterEditScreen.classList.add('hidden');
-            updateView('space');
-        }
+        showScreen('characterDetail');
     });
     dom.editCharAvatarUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) { const reader = new FileReader(); reader.onload = (event) => dom.editCharAvatar.src = event.target.result; reader.readAsDataURL(file); }
     });
+    dom.deleteCharacterBtn.addEventListener('click', () => {
+        if (confirm('确定要删除这个角色吗？此操作无法撤销。')) { characters = characters.filter(c => c.id !== activeCharacterId); saveCharacters(); activeCharacterId = null; showScreen('home'); }
+    });
 
-    // Profile Settings Logic (unchanged)
+    // Profile Settings Logic
     const saveProfileSettings = () => {
         const profile = { name: dom.userNameInput.value, setting: dom.userSettingInput.value, avatar: dom.profilePic.src };
         localStorage.setItem('aiChatProfile', JSON.stringify(profile));
@@ -379,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.userNameInput.addEventListener('blur', saveProfileSettings);
     dom.userSettingInput.addEventListener('blur', saveProfileSettings);
 
-    // API Settings Logic (unchanged)
+    // API Settings Logic
     const defaultModels = { openai: { "gpt-3.5-turbo": "GPT-3.5-Turbo" }, gemini: { "gemini-pro": "Gemini Pro" } };
     const restoreSelection = (modelId) => { if (!modelId) return; const optionExists = Array.from(dom.modelSelect.options).some(opt => opt.value === modelId); if (optionExists) { dom.modelSelect.value = modelId; } };
     const populateModels = (models, type) => { const group = type === 'openai' ? dom.openaiModelsGroup : dom.geminiModelsGroup; group.innerHTML = ''; for (const [id, name] of Object.entries(models)) { const option = document.createElement('option'); option.value = id; option.textContent = name; group.appendChild(option); } };
@@ -456,40 +532,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderChatHistory = () => {
         dom.chatHistory.innerHTML = '';
         const char = characters.find(c => c.id === activeCharacterId);
-        
-        // **FIXED**: Add a proper title to the chat header
-        const chatHeader = dom.chatScreen.querySelector('.page-header-bar');
-        let titleEl = chatHeader.querySelector('.chat-title');
-        if (!titleEl) {
-            titleEl = document.createElement('h2');
-            titleEl.className = 'chat-title';
-            chatHeader.insertBefore(titleEl, dom.chatScreen.querySelector('.header-actions'));
-        }
-
-        if (char) {
-            titleEl.textContent = char.name;
-            if (char.history && char.history.length > 0) {
-                char.history.forEach(msg => addMessageToHistory(msg.content, msg.role === 'ai' ? 'assistant' : 'user'));
-            } else {
-                // **FIXED**: Display a welcome message if history is empty
-                const welcomeEl = document.createElement('div');
-                welcomeEl.className = 'chat-welcome-message';
-                welcomeEl.textContent = `你正在与 “${char.name}” 开始一段新的对话。`;
-                dom.chatHistory.appendChild(welcomeEl);
-            }
-        } else {
-            titleEl.textContent = '聊天';
-            const welcomeEl = document.createElement('div');
-            welcomeEl.className = 'chat-welcome-message';
-            welcomeEl.innerHTML = `没有选中的聊天对象。<br>请前往 “🪷空间” 选择或创建一个角色。`;
-            dom.chatHistory.appendChild(welcomeEl);
-        }
+        if (char && char.history) char.history.forEach(msg => addMessageToHistory(msg.content, msg.role === 'ai' ? 'assistant' : 'user'));
     };
     const addMessageToHistory = (text, sender) => {
-        // Clear welcome message if it exists
-        const welcomeMsg = dom.chatHistory.querySelector('.chat-welcome-message');
-        if (welcomeMsg) welcomeMsg.remove();
-
         const el = document.createElement('div');
         el.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
         el.textContent = text;
@@ -512,17 +557,21 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const userMessage = dom.chatInput.value.trim();
         if (!userMessage) return;
+
         if (!activeCharacterId) {
-            alert("请先在'🪷空间'页面选择一个角色。");
-            updateView('space');
+            alert('请先通过悬浮球 🪷 选择一个角色开始聊天。');
             return;
         }
+
         const char = characters.find(c => c.id === activeCharacterId);
         const settings = JSON.parse(localStorage.getItem('aiChatApiSettings') || '{}');
         const isGemini = settings.apiType === 'gemini';
         const apiKey = isGemini ? settings.geminiApiKey : settings.openaiApiKey;
         const apiUrl = isGemini ? 'https://generativelanguage.googleapis.com/v1beta' : settings.openaiApiUrl;
-        if (!apiUrl || !apiKey) { alert('请先在“我的”页面配置 API！'); showSubScreen('apiSettings'); return; }
+        if (!apiUrl || !apiKey) { 
+            alert('请先通过悬浮球 🔌 配置 API！');
+            return; 
+        }
         
         char.history = char.history || [];
         addMessageToHistory(userMessage, 'user');
@@ -557,9 +606,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Widget Settings Logic (unchanged)
+    // Widget Settings Logic
     const updateSliderProgress = (slider) => {
-        const min = +slider.min; const max = +slider.max; const val = +slider.value;
+        const min = +slider.min;
+        const max = +slider.max;
+        const val = +slider.value;
         const percentage = (val - min) * 100 / (max - min);
         slider.style.setProperty('--progress', `${percentage}%`);
     };
@@ -569,34 +620,49 @@ document.addEventListener('DOMContentLoaded', () => {
         root.style.setProperty('--widget-bg-alpha', opacity);
     };
     const saveWidgetSettings = () => {
-        const settings = { opacity: dom.opacitySlider.value, brightness: dom.brightnessSlider.value, };
+        const settings = {
+            opacity: dom.opacitySlider.value,
+            brightness: dom.brightnessSlider.value,
+        };
         localStorage.setItem('aiChatWidgetSettings', JSON.stringify(settings));
     };
     const loadWidgetSettings = () => {
         const saved = localStorage.getItem('aiChatWidgetSettings');
         let settings = { opacity: 0.3, brightness: 0 };
-        if (saved) { settings = { ...settings, ...JSON.parse(saved) }; }
+        if (saved) {
+            settings = { ...settings, ...JSON.parse(saved) };
+        }
         dom.opacitySlider.value = settings.opacity;
         dom.brightnessSlider.value = settings.brightness;
         applyWidgetStyles(settings.opacity, settings.brightness);
         updateSliderProgress(dom.opacitySlider);
         updateSliderProgress(dom.brightnessSlider);
     };
+    const onSliderInput = (event) => {
+        applyWidgetStyles(dom.opacitySlider.value, dom.brightnessSlider.value);
+        updateSliderProgress(event.target);
+    };
     dom.opacitySlider.addEventListener('input', onSliderInput);
     dom.opacitySlider.addEventListener('change', saveWidgetSettings);
     dom.brightnessSlider.addEventListener('input', onSliderInput);
     dom.brightnessSlider.addEventListener('change', saveWidgetSettings);
 
-    // --- Initial Load ---
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialView = urlParams.get('view') || 'space';
 
-    loadCharacters();
-    loadProfileSettings();
-    loadApiSettings();
-    loadWidgetSettings();
-    loadLabelSettings();
-    generateEntertainmentItems();
-    loadBackgrounds();
-    updateView(initialView);
+    // --- Initial Load ---
+    const initialSetup = () => {
+        loadCharacters();
+        loadProfileSettings();
+        loadApiSettings();
+        loadWidgetSettings();
+        loadLabelSettings();
+        generateEntertainmentItems();
+        loadBackgrounds();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const startScreen = urlParams.get('start');
+        
+        showScreen(startScreen || 'chat'); 
+    };
+
+    initialSetup();
 });
