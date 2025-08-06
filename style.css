@@ -247,12 +247,13 @@ body.manual-body { background: #f0f2f5; color: #333; align-items: flex-start; pa
 }
 #fab-container.active .fab-button {
     opacity: 1;
-    /* 180度左半圆, 5个按钮, 每个间隔 180/(5-1) = 45度, 从-90度(正上方)开始, 逆时针旋转 */
-    transform: rotate(calc(-45deg * var(--i) - 90deg)) translateY(-85px) rotate(calc(45deg * var(--i) + 90deg));
+    /* 从0度(正右方)开始, 逆时针旋转 */
+    transform: rotate(calc(-45deg * var(--i))) translateY(-85px) rotate(calc(45deg * var(--i)));
 }
 .fab-button:active {
     transform: scale(1.1);
 }
 #fab-container.active .fab-button:active {
-    transform: rotate(calc(-45deg * var(--i) - 90deg)) translateY(-85px) rotate(calc(45deg * var(--i) + 90deg)) scale(1.1);
+    /* 保持展开状态下的按压效果 */
+    transform: rotate(calc(-45deg * var(--i))) translateY(-85px) rotate(calc(45deg * var(--i))) scale(1.1);
 }
