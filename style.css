@@ -39,7 +39,7 @@ input:checked + .toggle-track .toggle-thumb { transform: translateX(24px); }
 .dropdown-item { padding: 12px 15px; font-size: 14px; cursor: pointer; text-decoration: none; color: var(--text-color); display: block;}
 .dropdown-item:hover { background-color: #f0f0f0; }
 
-#character-list { flex-grow: 1; padding: 15px; display: flex; flex-direction: column; gap: 12px; background-color: transparent; }
+#character-list { flex-grow: 1; padding: 7px; 15px; 15px; display: flex; flex-direction: column; gap: 12px; background-color: transparent; }
 .character-card { display: flex; align-items: center; padding: 15px; cursor: pointer; background-color: var(--primary-bg); border-radius: 16px; border: 1px solid #e9e9eb; }
 .character-card:hover { background-color: #fafafa; }
 .character-card img { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; margin-right: 15px; background-color: #e9ecef; }
@@ -70,7 +70,7 @@ input:checked + .toggle-track .toggle-thumb { transform: translateX(24px); }
 
 #my-dashboard-screen { background-size: cover; background-position: center; position: relative; padding-top: 0; }
 #my-dashboard-screen::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.1); z-index: 1; }
-.icon-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: min-content; column-gap: 15px; row-gap: 20px; padding: 15px 8% calc(env(safe-area-inset-bottom, 0px) + 20px); }
+.icon-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: min-content; column-gap: 15px; row-gap: 20px; padding: 7px 8% calc(env(safe-area-inset-bottom, 0px) + 20px); }
 .icon-widget { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; cursor: pointer; transition: transform 0.2s ease, background-color 0.1s; text-decoration: none; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.2); background-color: hsla(0, 0%, var(--widget-bg-lightness), var(--widget-bg-alpha)); border-radius: 28px; border: none; }
 .icon-widget:active { transform: scale(0.95); }
 .icon-widget .icon-display { font-size: 36px; font-weight: bold; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
