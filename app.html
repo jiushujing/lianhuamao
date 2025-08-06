@@ -10,14 +10,32 @@
 
     <div id="phone-container">
         <div id="screen-container">
-            <!-- 🪷 空间界面 (原首页) -->
-            <div id="home-screen" class="screen">
+            <!-- 💬 聊天主页 -->
+            <div id="chat-screen" class="screen main-screen hidden">
                 <div class="page-header-bar">
-                    <div id="page-toggle-switch" class="page-toggle-switch three-state">
-                        <div id="toggle-thumb" class="toggle-thumb"></div>
-                        <span class="toggle-icon">💬</span>
-                        <span class="toggle-icon">🪷</span>
-                        <span class="toggle-icon">🐱</span>
+                    <div class="page-toggle-switch three-state">
+                        <div class="toggle-thumb"></div>
+                        <span class="toggle-icon" data-view="chat">💬</span>
+                        <span class="toggle-icon" data-view="space">🪷</span>
+                        <span class="toggle-icon" data-view="dashboard">🐱</span>
+                    </div>
+                    <div class="header-actions">
+                        <a href="index.html" target="_blank" id="manual-btn" class="header-button icon-button">📑</a>
+                        <button id="chat-settings-btn" class="header-button icon-button">⚙️</button>
+                    </div>
+                </div>
+                <div id="chat-history"></div>
+                <form id="chat-form"><input type="text" id="chat-input" placeholder="输入消息..." autocomplete="off"><button type="submit" id="send-button">➤</button></form>
+            </div>
+            
+            <!-- 🪷 空间界面 (原首页) -->
+            <div id="home-screen" class="screen main-screen hidden">
+                <div class="page-header-bar">
+                    <div class="page-toggle-switch three-state">
+                        <div class="toggle-thumb"></div>
+                        <span class="toggle-icon" data-view="chat">💬</span>
+                        <span class="toggle-icon" data-view="space">🪷</span>
+                        <span class="toggle-icon" data-view="dashboard">🐱</span>
                     </div>
                     <h2 id="batch-delete-header">选择项目</h2>
                     <div class="header-actions">
@@ -34,32 +52,14 @@
                 <div id="batch-delete-footer"><button id="delete-selected-btn" class="action-button btn-danger">删除选中</button><button id="cancel-delete-btn" class="action-button btn-secondary">取消</button></div>
             </div>
 
-            <!-- 💬 聊天主页 -->
-            <div id="chat-screen" class="screen hidden">
-                <div class="page-header-bar">
-                    <div id="page-toggle-switch-chat" class="page-toggle-switch three-state">
-                         <div id="toggle-thumb-chat" class="toggle-thumb"></div>
-                        <span class="toggle-icon">💬</span>
-                        <span class="toggle-icon">🪷</span>
-                        <span class="toggle-icon">🐱</span>
-                    </div>
-                    <div class="header-actions">
-                        <a href="index.html" target="_blank" id="manual-btn" class="header-button icon-button">📑</a>
-                        <button id="chat-settings-btn" class="header-button icon-button">⚙️</button>
-                    </div>
-                </div>
-                <div id="chat-history"></div>
-                <form id="chat-form"><input type="text" id="chat-input" placeholder="输入消息..." autocomplete="off"><button type="submit" id="send-button">➤</button></form>
-            </div>
-
             <!-- 🐱 我的桌面 -->
-            <div id="my-dashboard-screen" class="screen hidden" data-bg-target="dashboard">
+            <div id="my-dashboard-screen" class="screen main-screen hidden" data-bg-target="dashboard">
                 <div class="page-header-bar">
-                    <div id="page-toggle-switch-dash" class="page-toggle-switch three-state">
-                         <div id="toggle-thumb-dash" class="toggle-thumb"></div>
-                        <span class="toggle-icon">💬</span>
-                        <span class="toggle-icon">🪷</span>
-                        <span class="toggle-icon">🐱</span>
+                    <div class="page-toggle-switch three-state">
+                         <div class="toggle-thumb"></div>
+                        <span class="toggle-icon" data-view="chat">💬</span>
+                        <span class="toggle-icon" data-view="space">🪷</span>
+                        <span class="toggle-icon" data-view="dashboard">🐱</span>
                     </div>
                 </div>
                 <div id="icon-grid" class="icon-grid">
@@ -86,13 +86,13 @@
             </div>
 
             <!-- Sub Screens (Detail, Edit, Settings etc.) -->
-            <div id="character-detail-screen" class="screen hidden">
+            <div id="character-detail-screen" class="screen sub-screen hidden">
                 <div class="page-header-bar"><button class="back-button">←</button></div>
                 <div class="content"><img id="detail-avatar" src="" alt="Avatar"><h3 id="detail-name"></h3>
                     <div class="btn-group"><button id="go-to-chat-btn" class="action-button btn-primary">与TA聊天</button><button id="go-to-edit-btn" class="action-button btn-secondary">编辑角色设定</button></div>
                 </div>
             </div>
-            <div id="character-edit-screen" class="screen hidden">
+            <div id="character-edit-screen" class="screen sub-screen hidden">
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>编辑角色</h2></div>
                     <form id="character-edit-form">
@@ -103,7 +103,7 @@
                     </form>
                 </div>
             </div>
-            <div id="profile-settings-screen" class="screen hidden">
+            <div id="profile-settings-screen" class="screen sub-screen hidden">
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>我的设定</h2></div>
                     <form id="profile-form">
@@ -112,7 +112,7 @@
                     </form>
                 </div>
             </div>
-            <div id="api-settings-screen" class="screen hidden">
+            <div id="api-settings-screen" class="screen sub-screen hidden">
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>API 设定</h2></div>
                     <form id="api-settings-form">
@@ -125,7 +125,7 @@
                     </form>
                 </div>
             </div>
-            <div id="background-settings-screen" class="screen hidden">
+            <div id="background-settings-screen" class="screen sub-screen hidden">
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>背景设定</h2></div>
                     <div class="bg-settings-redesigned">
@@ -150,8 +150,7 @@
                     </div>
                 </div>
             </div>
-             <!-- NEW: Chat Settings Screen -->
-            <div id="chat-settings-screen" class="screen hidden">
+            <div id="chat-settings-screen" class="screen sub-screen hidden">
                 <div class="settings-page">
                     <div class="page-header-bar"><button class="back-button">←</button><h2>聊天设置</h2></div>
                     <p style="text-align: center; margin-top: 50px;">聊天设置功能正在开发中...</p>
